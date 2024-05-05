@@ -16,12 +16,12 @@ generator client {
 model Recipe {
   id String @id @default(cuid()) @map("_id")
   isAggregating Boolean @default(false)
-title String
-description String
-creationDate DateTime
-ingredients RecipeIngredient[]
+  title String
+  description String
+  creationDate DateTime
+  ingredients RecipeIngredient[]
 }
 
 type RecipeIngredient {
-  name     String
+  name String
 }

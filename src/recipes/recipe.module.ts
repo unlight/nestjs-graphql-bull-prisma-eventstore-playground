@@ -1,8 +1,8 @@
-import { RecipesResolver } from './recipes.resolver';
-import { RecipesService } from './recipes.service';
+import { RecipeResolver } from './recipe.resolver';
+import { RecipeService } from './recipe.service';
 import { Module } from '@nestjs/common';
 
 @Module({
-  providers: [RecipesResolver, RecipesService],
+  providers: [RecipeResolver, RecipeService],
 })
-export class RecipesModule {}
+export class RecipeModule {}

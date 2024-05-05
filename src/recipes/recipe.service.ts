@@ -4,7 +4,7 @@ import { RecipesArgs } from './dto/recipes.args';
 import { Recipe } from './models/recipe.model';
 
 @Injectable()
-export class RecipesService {
+export class RecipeService {
   /**
    * MOCK
    * Put some real business logic here
@@ -12,7 +12,12 @@ export class RecipesService {
    */
 
   async create(data: NewRecipeInput): Promise<Recipe> {
-    return {} as any;
+    return {
+      creationDate: new Date(),
+      id: '123',
+      title: data.title,
+      ingredients: data.ingredients,
+    };
   }
 
   async findOneById(id: string): Promise<Recipe> {

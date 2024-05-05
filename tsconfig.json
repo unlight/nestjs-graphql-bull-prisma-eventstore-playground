@@ -27,8 +27,9 @@
     "declarationMap": false,
     "skipLibCheck": true,
     "lib": ["esnext"],
+    "baseUrl": ".",
     "paths": {
-      "@/nestjs-prisma": ["src/app_modules/prisma/src"]
+      "@/nestjs-prisma": ["./src/app_modules/prisma/src"]
     },
     "plugins": []
   },

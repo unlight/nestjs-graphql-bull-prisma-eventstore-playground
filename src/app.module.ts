@@ -14,10 +14,12 @@ import { GraphQLError } from 'graphql';
 import { SevenBoom, formatErrorGenerator } from 'graphql-apollo-errors';
 import { CqrxModule } from 'nestjs-cqrx';
 import { NestoLogger, NestologModule } from 'nestolog';
+import { RecipeModule } from './recipes/recipe.module';
 
 @Global()
 @Module({
   imports: [
+    RecipeModule,
     PrismaModule.register({ logQueries: true }),
     CqrxModule.forRoot({
       eventstoreDbConnectionString: `esdb://localhost:2113?tls=false`,
@@ -45,23 +47,23 @@ function graphqlModuleFactory(logger: Logger): ApolloDriverConfig {
     autoSchemaFile: '~schema.gql',
     sortSchema: true,
     installSubscriptionHandlers: true,
-    formatError: formatErrorGenerator({
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      logger: logger as any,
-      hideSensitiveData: false,
-      nonBoomTransformer: error => {
-        return error instanceof BadRequestException ||
-          error instanceof GraphQLError
-          ? SevenBoom.badRequest(error as any)
-          : SevenBoom.badImplementation(error);
-      },
-    }),
+    // formatError: formatErrorGenerator({
+    //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    //   logger: logger as any,
+    //   hideSensitiveData: false,
+    //   // nonBoomTransformer: error => {
+    //   //   console.log('error', error);
+    //   //   return error instanceof BadRequestException ||
+    //   //     error instanceof GraphQLError
+    //   //     ? SevenBoom.badRequest(error as any)
+    //   //     : SevenBoom.badImplementation(error);
+    //   // },
+    // }),
   };
 }
 
 export function configureApp(app: INestApplication) {
   app.enableCors();
-  // Do async validation
   // app.useGlobalPipes(
   //   new ValidationPipe({
   //     transform: true,

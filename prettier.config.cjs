@@ -5,4 +5,8 @@ module.exports = {
   semi: true,
   singleQuote: true,
   arrowParens: 'avoid',
+  importOrder: ['^[./]'],
+  importOrderSeparation: true,
+  importOrderSortSpecifiers: true,
+  importOrderParserPlugins: ['typescript', 'decorators-legacy'],
 };
