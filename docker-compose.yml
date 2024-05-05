@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  eventstoredb:
+    image: eventstore/eventstore:23.10.0-bookworm-slim
+    environment:
+      - EVENTSTORE_CLUSTER_SIZE=1
+      - EVENTSTORE_RUN_PROJECTIONS=System # All, None, System
+      - EVENTSTORE_START_STANDARD_PROJECTIONS=true
+      - EVENTSTORE_EXT_TCP_PORT=1113
+      - EVENTSTORE_HTTP_PORT=2113
+      - EVENTSTORE_INSECURE=true
+      - EVENTSTORE_ENABLE_EXTERNAL_TCP=true
+      - EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP=true
+      - EVENTSTORE_MEM_DB=true
+    ports:
+      - '1113:1113'
+      - '2113:2113'
+    volumes:
+      - type: volume
+        source: eventstore-volume-data
+        target: /var/lib/eventstore
+      - type: volume
+        source: eventstore-volume-logs
+        target: /var/log/eventstore
+    networks:
+      - esdb_network
+
+  mongo1:
+    image: mongo:7.0
+    command: ['--replSet', 'rs0', '--bind_ip_all', '--port', '27017']
+    ports:
+      - 27017:27017
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    healthcheck:
+      test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'host.docker.internal:27017'}]}) }" | mongosh --port 27017 --quiet
+      interval: 5s
+      timeout: 30s
+      start_period: 0s
+      start_interval: 1s
+      retries: 30
+    volumes:
+      - 'mongo1_data:/data/db'
+      - 'mongo1_config:/data/configdb'
+
+  redis:
+    image: redis:4-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+
+networks:
+  esdb_network:
+    driver: bridge
+
+volumes:
+  mongo1_data:
+  mongo1_config:
+  eventstore-volume-data:
+  eventstore-volume-logs:

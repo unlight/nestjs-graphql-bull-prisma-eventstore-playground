@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "ts-node": {
+    "swc": true,
+    "transpileOnly": true,
+    "moduleTypes": {
+      "webpack.config.js": "cjs"
+    },
+    "require": ["tsconfig-paths/register"]
+  },
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitAny": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "outDir": "dist",
+    "pretty": true,
+    "esModuleInterop": true,
+    "removeComments": false,
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": false,
+    "skipLibCheck": true,
+    "lib": ["esnext"],
+    "paths": {
+      "@/nestjs-prisma": ["src/app_modules/prisma/src"]
+    },
+    "plugins": []
+  },
+  "include": ["src"]
+}
