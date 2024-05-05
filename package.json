@@ -63,6 +63,7 @@
     "node-dev": "^8.0.0",
     "prettier": "^3.2.5",
     "prisma": "^5.13.0",
+    "simplytyped": "^3.3.0",
     "supertest": "^7.0.0",
     "swc-loader": "^0.2.6",
     "ts-node": "^10.9.2",
