@@ -6,11 +6,10 @@ import {
 } from '@nestjs/bull';
 import { Logger } from '@nestjs/common';
 import { Job } from 'bull';
-import { RecipeService } from './recipe.service';
-import { NewRecipeInput } from './dto/new-recipe.input';
 import { transformAndValidate } from 'class-transformer-validator';
 import { ObjectType } from 'simplytyped';
-import { PubSub } from 'graphql-subscriptions';
+import { NewRecipeInput } from './dto/new-recipe.input';
+import { RecipeService } from './recipe.service';
 
 @Processor('recipe')
 export class RecipeProcessor {

@@ -4,11 +4,19 @@ import { RecipesArgs } from './dto/recipes.args';
 import { Recipe } from './models/recipe.model';
 import { RecipeService } from './recipe.service';
 import { NotFoundException } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
+import {
+  Args,
+  Info,
+  Mutation,
+  Query,
+  Resolver,
+  Subscription,
+} from '@nestjs/graphql';
 import { Queue } from 'bull';
 import { createId } from '@paralleldrive/cuid2';
-import { ObjectType } from 'simplytyped';
 import { PubSub } from 'graphql-subscriptions';
+import { GraphQLResolveInfo } from 'graphql';
+import { PrismaSelect } from '@paljs/plugins';
 
 @Resolver(() => Recipe)
 export class RecipeResolver {
@@ -19,7 +27,13 @@ export class RecipeResolver {
   ) {}
 
   @Query(() => Recipe)
-  async recipe(@Args('id') id: string): Promise<Recipe> {
+  async recipe(
+    @Args('id') id: string,
+    @Info() info: GraphQLResolveInfo,
+  ): Promise<Recipe> {
+    const select = new PrismaSelect(info).value.select;
+    console.log('select', select);
+
     const recipe = await this.recipeService.findOneById(id);
     if (!recipe) {
       throw new NotFoundException(id);
@@ -42,10 +56,10 @@ export class RecipeResolver {
     return String(job.id);
   }
 
-  @Mutation(() => Boolean)
-  async removeRecipe(@Args('id') id: string) {
-    return this.recipeService.remove(id);
-  }
+  // @Mutation(() => Boolean)
+  // async removeRecipe(@Args('id') id: string) {
+  //   return this.recipeService.remove(id);
+  // }
 
   @Subscription(() => Recipe)
   recipeAdded() {

@@ -1,49 +1,44 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import to from 'await-to-js';
+import { PubSub } from 'graphql-subscriptions';
 import { NewRecipeInput } from './dto/new-recipe.input';
 import { RecipesArgs } from './dto/recipes.args';
-import { Recipe } from './models/recipe.model';
+import { Recipe as RecipeObject } from './models/recipe.model';
 import { Recipe as RecipeAggregate } from './recipe.aggregate';
-import { PubSub } from 'graphql-subscriptions';
-import { InjectRepository, PrismaRepository } from '@/nestjs-prisma';
-import { AggregateRepository, InjectAggregateRepository } from 'nestjs-cqrx';
-import { Prisma } from '@prisma/client';
+import { Recipe } from './recipe.providers';
 
 @Injectable()
 export class RecipeService {
   constructor(
     private readonly pubSub: PubSub,
-    @InjectRepository('recipe')
-    private readonly viewRepository: PrismaRepository['recipe'],
-    @InjectAggregateRepository(RecipeAggregate)
-    private readonly aggregateRepository: AggregateRepository<RecipeAggregate>,
+    @Recipe.InjectViewRepository()
+    private readonly viewRepository: Recipe.ViewRepository,
+    @Recipe.InjectAggregateRepository()
+    private readonly aggregateRepository: Recipe.AggregateRepository,
   ) {}
 
   async addRecipe(recipeId: string, data: NewRecipeInput): Promise<void> {
     const recipe = new RecipeAggregate(recipeId);
     recipe.addRecipe(data);
     await this.aggregateRepository.save(recipe);
-    const recipeAdded = await this.createProjection(recipeId);
+    const [error, recipeAdded] = await to(this.createProjection(recipeId));
+
+    if (error) {
+      recipe.removeRecipe({ reason: error.message });
+      await this.aggregateRepository.save(recipe);
+
+      return;
+    }
 
     this.pubSub.publish('recipeAdded', { recipeAdded });
   }
 
-  async findOneById(id: string): Promise<Recipe> {
-    return {} as any;
-  }
-
-  async findAll(recipesArgs: RecipesArgs): Promise<Recipe[]> {
-    return [] as Recipe[];
-  }
-
-  async remove(id: string): Promise<boolean> {
-    return true;
-  }
-
-  async createProjection(recipe: RecipeAggregate);
-  async createProjection(id: string);
-  async createProjection(arg: string | RecipeAggregate) {
+  createProjection(recipe: RecipeAggregate): Promise<any>;
+  createProjection(id: string): Promise<any>;
+  async createProjection(arg: string | RecipeAggregate): Promise<any> {
     const [id, recipe] = await this.parseStreamIdAggregate(arg);
-
+    Prisma.PrismaClientKnownRequestError;
     const data: Prisma.RecipeCreateInput = {
       title: recipe.title,
       creationDate: recipe.addedAt,
@@ -64,6 +59,14 @@ export class RecipeService {
       return [arg, recipe];
     }
     return [arg.id, arg];
+  }
+
+  async findOneById(id: string): Promise<RecipeObject | null> {
+    return this.viewRepository.findFirst({ where: { id } });
+  }
+
+  async findAll(recipesArgs: RecipesArgs): Promise<RecipeObject[]> {
+    return [] as RecipeObject[];
   }
 
   // handleCreateError(eventError: EventError): RemoveCountry | undefined {

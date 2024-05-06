@@ -8,8 +8,8 @@ export class Recipe {
   @Directive('@upper')
   title: string = '';
 
-  @Field({ nullable: true })
-  description?: string;
+  @Field(() => String, { nullable: true })
+  description?: string | null;
 
   @Field()
   creationDate!: Date;
