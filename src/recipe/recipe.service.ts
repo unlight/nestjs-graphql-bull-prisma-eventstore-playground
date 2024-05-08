@@ -7,6 +7,7 @@ import { RecipesArgs } from './dto/recipes.args';
 import { Recipe as RecipeObject } from './models/recipe.model';
 import { Recipe as RecipeAggregate } from './recipe.aggregate';
 import { Recipe } from './recipe.providers';
+import { ObjectType } from 'simplytyped';
 
 @Injectable()
 export class RecipeService {
@@ -18,9 +19,12 @@ export class RecipeService {
     private readonly aggregateRepository: Recipe.AggregateRepository,
   ) {}
 
-  async addRecipe(recipeId: string, data: NewRecipeInput): Promise<void> {
+  async addRecipe(
+    recipeId: string,
+    objectData: ObjectType<NewRecipeInput>,
+  ): Promise<void> {
     const recipe = new RecipeAggregate(recipeId);
-    recipe.addRecipe(data);
+    await recipe.addRecipe(objectData);
     await this.aggregateRepository.save(recipe);
     const [error, recipeAdded] = await to(this.createProjection(recipeId));
 
@@ -38,7 +42,6 @@ export class RecipeService {
   createProjection(id: string): Promise<any>;
   async createProjection(arg: string | RecipeAggregate): Promise<any> {
     const [id, recipe] = await this.parseStreamIdAggregate(arg);
-    Prisma.PrismaClientKnownRequestError;
     const data: Prisma.RecipeCreateInput = {
       title: recipe.title,
       creationDate: recipe.addedAt,
@@ -67,6 +70,10 @@ export class RecipeService {
 
   async findAll(recipesArgs: RecipesArgs): Promise<RecipeObject[]> {
     return [] as RecipeObject[];
+  }
+
+  async markAsError(id: string, error: string) {
+    await this.viewRepository.update({ where: { id }, data: { title: '' } });
   }
 
   // handleCreateError(eventError: EventError): RemoveCountry | undefined {

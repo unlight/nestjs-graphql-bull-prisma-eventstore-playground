@@ -14,8 +14,8 @@ model Recipe {
   id String @id @default(cuid()) @map("_id")
   isAggregating Boolean @default(false)
   title String
-  description String?
-  creationDate DateTime
+  description String @default("")
+  creationDate DateTime @default(now())
   ingredients String[]
 }
 

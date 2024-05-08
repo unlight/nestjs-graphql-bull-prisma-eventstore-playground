@@ -1,6 +1,8 @@
 import { AggregateRoot, EventHandler } from 'nestjs-cqrx';
 import { RecipeRemoved, RecipeAdded } from './recipe.events';
 import { NewRecipeInput } from './dto/new-recipe.input';
+import { transformAndValidate } from 'class-transformer-validator';
+import { ObjectType } from 'simplytyped';
 
 export class Recipe extends AggregateRoot {
   title: string = '';
@@ -18,12 +20,14 @@ export class Recipe extends AggregateRoot {
     this.title = title;
   }
 
-  addRecipe(data: NewRecipeInput) {
+  async addRecipe(objectData: ObjectType<NewRecipeInput>) {
+    const data = await transformAndValidate(NewRecipeInput, objectData);
+
     this.apply(
       new RecipeAdded({
-        ...data,
         id: this.id,
         addedAt: new Date(),
+        title: data.title,
       }),
     );
   }

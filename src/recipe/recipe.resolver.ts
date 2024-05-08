@@ -32,7 +32,7 @@ export class RecipeResolver {
     @Info() info: GraphQLResolveInfo,
   ): Promise<Recipe> {
     const select = new PrismaSelect(info).value.select;
-    console.log('select', select);
+    // console.log('select', select);
 
     const recipe = await this.recipeService.findOneById(id);
     if (!recipe) {

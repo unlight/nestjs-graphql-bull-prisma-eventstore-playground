@@ -6,7 +6,6 @@ import {
 } from '@nestjs/bull';
 import { Logger } from '@nestjs/common';
 import { Job } from 'bull';
-import { transformAndValidate } from 'class-transformer-validator';
 import { ObjectType } from 'simplytyped';
 import { NewRecipeInput } from './dto/new-recipe.input';
 import { RecipeService } from './recipe.service';
@@ -20,14 +19,19 @@ export class RecipeProcessor {
   @Process('addRecipe')
   async addRecipe(job: Job<ObjectType<NewRecipeInput>>) {
     const recipeId = job.id.toString();
-    // todo: catch validation failed
-    const data = await transformAndValidate(NewRecipeInput, job.data);
-    await this.recipeService.addRecipe(recipeId, data);
+    await this.recipeService.addRecipe(recipeId, job.data);
   }
 
   @OnQueueCompleted()
-  onQueueCompleted(job: Job, result: unknown) {}
+  async onQueueCompleted(job: Job, result: unknown) {
+    const id = String(job.id);
+
+    await this.recipeService.createProjection(id);
+  }
 
   @OnQueueFailed()
-  onQueueFailed(job: Job, err: Error) {}
+  async onQueueFailed(job: Job, err: Error) {
+    this.logger.error(err);
+    const id = String(job.id);
+  }
 }

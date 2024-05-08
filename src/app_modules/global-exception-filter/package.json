@@ -9,5 +9,13 @@
   "scripts": {
     "clean": "rm -rf ./dist",
     "build": "tsc -p tsconfig.build.json"
+  },
+  "dependencies": {
+    "class-validator-flat-formatter": "^4.0.2",
+    "errorish": "^1.0.0"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^10.3.8",
+    "class-validator": "^0.14.1"
   }
 }

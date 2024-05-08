@@ -5,8 +5,9 @@ import {
   ExceptionFilter,
   Logger,
 } from '@nestjs/common';
+import { ValidationError } from 'class-validator';
 import { validationErrorsAsString } from 'class-validator-flat-formatter';
-import { serializeError } from 'serialize-error';
+import { ensure } from 'errorish';
 import { JsonObject } from 'type-fest';
 
 @Catch()
@@ -14,23 +15,19 @@ export class GlobalExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(this.constructor.name);
 
   catch(exception: unknown, host: ArgumentsHost) {
-    const serializedError = serializeError(exception);
-    this.logger.error(serializedError.stack);
+    const error = ensure(exception);
 
-    const message = this.getValidationError(exception);
-    if (message) {
-      this.logger.error(message);
-    }
+    this.logger.error(error);
 
-    if (
-      host.getType<string>() === 'graphql' &&
-      exception &&
-      typeof exception === 'object'
-    ) {
-      this.extendError(exception, { message });
-    }
+    // if (
+    //   host.getType<string>() === 'graphql' &&
+    //   exception &&
+    //   typeof exception === 'object'
+    // ) {
+    //   this.extendError(exception, { message });
+    // }
 
-    return exception;
+    return error;
   }
 
   private extendError(exception: JsonObject, overrides: JsonObject) {
@@ -38,15 +35,11 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       if (value) exception[key] = value;
     }
   }
+}
 
-  private getValidationError(exception: unknown): string | undefined {
-    if (exception instanceof BadRequestException) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const validationErrors = exception.getResponse()['message'];
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      const message = validationErrorsAsString(validationErrors);
+export function exceptionFactory(validationErrors: ValidationError[]) {
+  const message = validationErrorsAsString(validationErrors);
+  const result = new BadRequestException(message);
 
-      return message;
-    }
-  }
+  return result;
 }

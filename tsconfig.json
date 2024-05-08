@@ -6,6 +6,9 @@
     "moduleTypes": {
       "webpack.config.js": "cjs"
     },
+    "compilerOptions": {
+      "module": "commonjs"
+    },
     "require": ["tsconfig-paths/register"]
   },
   "compilerOptions": {
@@ -29,7 +32,10 @@
     "lib": ["esnext"],
     "baseUrl": ".",
     "paths": {
-      "@/nestjs-prisma": ["./src/app_modules/prisma/src"]
+      "@/nestjs-prisma": ["./src/app_modules/prisma/src"],
+      "@/global-exception-filter": [
+        "./src/app_modules/global-exception-filter/src"
+      ]
     },
     "plugins": []
   },
