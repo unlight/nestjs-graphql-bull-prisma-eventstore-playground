@@ -37,7 +37,7 @@ import * as Modules from './modules';
     GraphQLModule.forRootAsync({
       imports: [Modules.Nestolog],
       driver: ApolloDriver,
-      inject: [NestoLogger],
+      inject: [Logger],
       useFactory: graphqlModuleFactory,
     }),
     BullModule.forRootAsync({
@@ -67,7 +67,7 @@ function graphqlModuleFactory(logger: Logger): ApolloDriverConfig {
         return error instanceof BadRequestException ||
           error instanceof GraphQLError
           ? SevenBoom.badRequest(error as any)
-          : SevenBoom.badImplementation(error);
+          : SevenBoom.badImplementation(error, { errorMessage: error.message });
       },
     }),
   };

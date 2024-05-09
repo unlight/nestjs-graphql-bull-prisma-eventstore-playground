@@ -37,7 +37,13 @@
         "./src/app_modules/global-exception-filter/src"
       ]
     },
-    "plugins": []
+    "plugins": [
+      {
+        "name": "@0no-co/graphqlsp",
+        "schema": "./~schema.gql",
+        "tadaOutputLocation": "./src/~graphql-env.d.ts"
+      }
+    ]
   },
   "include": ["src"]
 }

@@ -42,6 +42,7 @@
     "class-validator": "^0.14.1",
     "class-validator-flat-formatter": "^4.0.2",
     "dotenv": "^16.4.5",
+    "gql.tada": "^1.7.0",
     "graphql": "^16.8.1",
     "graphql-apollo-errors": "^2.0.3",
     "graphql-subscriptions": "^2.0.0",

@@ -1,10 +1,13 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { expect } from 'expect';
+import { graphql } from 'gql.tada';
+import { print } from 'graphql';
+import request from 'supertest';
 import { AppModule, configureApp } from '../app.module';
 
-// eslint-disable-next-line unicorn/prevent-abbreviations
 let app: INestApplication;
+let server: any;
 
 before(async () => {
   const testingModule = await Test.createTestingModule({
@@ -15,10 +18,30 @@ before(async () => {
   // app.useLogger(false);
 
   await app.init();
+  server = app.getHttpServer();
 });
 
 it('smoke', () => {
   expect(app).toBeTruthy();
+});
+
+it('read recipes', async () => {
+  const recipesQuery = graphql(/* GraphQL */ `
+    query {
+      recipes {
+        id
+      }
+    }
+  `);
+
+  const result = await request(server)
+    .post('/graphql')
+    .send({
+      query: print(recipesQuery),
+      variables: {},
+    })
+    .expect(200)
+    .then(response => response.body.data);
 });
 
 after(async () => {
