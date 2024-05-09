@@ -1,0 +1,13 @@
+diff --git a/node_modules/@nestjs-steroids/environment/dist/environment.factory.js b/node_modules/@nestjs-steroids/environment/dist/environment.factory.js
+index db18e23..f13201d 100644
+--- a/node_modules/@nestjs-steroids/environment/dist/environment.factory.js
++++ b/node_modules/@nestjs-steroids/environment/dist/environment.factory.js
+@@ -18,7 +18,7 @@ function getEnvironment(constructor, options) {
+     for (const [key, environmentName] of Object.entries(metadata)) {
+         instance[key] = (_a = process.env[environmentName]) !== null && _a !== void 0 ? _a : instance[key];
+     }
+-    instance = class_transformer_1.classToClass(instance, options === null || options === void 0 ? void 0 : options.transformOptions);
++    instance = class_transformer_1.instanceToInstance(instance, options === null || options === void 0 ? void 0 : options.transformOptions);
+     const errors = class_validator_1.validateSync(instance, options === null || options === void 0 ? void 0 : options.validatorOptions);
+     if ((errors === null || errors === void 0 ? void 0 : errors.length) > 0) {
+         throw new environment_loading_exception_1.EnvironmentLoadingException(errors);

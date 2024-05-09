@@ -6,9 +6,11 @@ import { RecipeProcessor } from './recipe.processor';
 import { PubSub } from 'graphql-subscriptions';
 import { CqrxModule } from 'nestjs-cqrx';
 import { Recipe } from './recipe.aggregate';
+import * as Modules from '../modules';
 
 @Module({
   imports: [
+    Modules.Prisma,
     CqrxModule.forFeature([Recipe]),
     BullModule.registerQueue({
       name: 'recipe',

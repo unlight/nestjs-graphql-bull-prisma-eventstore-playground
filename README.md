@@ -8,5 +8,3 @@
 - Prisma
 
 ## TODO
-
-- events nest cqrx

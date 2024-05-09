@@ -1,9 +1,7 @@
-import { PrismaModule } from '@/nestjs-prisma';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { BullModule } from '@nestjs/bull';
 import {
   BadRequestException,
-  Global,
   INestApplication,
   Logger,
   Module,
@@ -14,36 +12,45 @@ import { useContainer } from 'class-validator';
 import { GraphQLError } from 'graphql';
 import { SevenBoom, formatErrorGenerator } from 'graphql-apollo-errors';
 import { CqrxModule } from 'nestjs-cqrx';
-import { NestoLogger, NestologModule } from 'nestolog';
+import { NestoLogger } from 'nestolog';
 import { RecipeModule } from './recipe/recipe.module';
 import {
   GlobalExceptionFilter,
   exceptionFactory,
 } from '@/global-exception-filter';
+import { AppEnvironment } from './app.environment';
+import * as Modules from './modules';
 
-@Global()
 @Module({
   imports: [
-    RecipeModule,
-    PrismaModule.register({ logQueries: true }),
-    CqrxModule.forRoot({
-      eventstoreDbConnectionString: `esdb://localhost:2113?tls=false`,
+    Modules.Nestolog,
+    Modules.Environment,
+    Modules.Prisma,
+    CqrxModule.forRootAsync({
+      useFactory(env: AppEnvironment) {
+        return {
+          eventstoreDbConnectionString: env.eventstoreDbConnectionString,
+        };
+      },
+      inject: [AppEnvironment],
     }),
     GraphQLModule.forRootAsync({
+      imports: [Modules.Nestolog],
       driver: ApolloDriver,
-      inject: [Logger],
+      inject: [NestoLogger],
       useFactory: graphqlModuleFactory,
     }),
-    NestologModule.forRoot(),
-    BullModule.forRoot({
-      redis: {
-        host: 'localhost',
-        port: 6379,
+    BullModule.forRootAsync({
+      imports: [Modules.Environment],
+      inject: [AppEnvironment],
+      useFactory(env: AppEnvironment) {
+        return {
+          url: env.redisConnectionString,
+        };
       },
     }),
+    RecipeModule,
   ],
-  providers: [Logger],
-  exports: [Logger],
 })
 export class AppModule {}
 

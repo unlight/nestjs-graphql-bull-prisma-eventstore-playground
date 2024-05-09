@@ -17,7 +17,6 @@ export class PrismaModule {
     const repositoryProviers = createRepositoryProviers();
     options = { ...defaultPrismaOptions, ...options };
     return {
-      global: true,
       module: PrismaModule,
       providers: [
         {
@@ -34,7 +33,6 @@ export class PrismaModule {
   static registerAsync(options: PrismaModuleAsyncOptions): DynamicModule {
     const repositoryProviers = createRepositoryProviers();
     return {
-      global: true,
       module: PrismaModule,
       imports: options.imports || [],
       providers: [
