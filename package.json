@@ -51,7 +51,6 @@
     "prisma-query-log": "^3.2.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "serialize-error": "8",
     "typeid-js": "^0.7.0"
   },
   "devDependencies": {

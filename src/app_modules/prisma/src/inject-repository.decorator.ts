@@ -7,11 +7,15 @@ const prismaRepositories = new Set<PrismaDelegateNames>();
 export function createRepositoryProviers() {
   return [...prismaRepositories].map(name => {
     return {
-      provide: `${name}PrismaRepository`,
+      provide: getRepositoryToken(name),
       inject: [PrismaRepository],
       useFactory: (prisma: PrismaRepository) => prisma[name],
     };
   });
+}
+
+export function getRepositoryToken(name: PrismaDelegateNames) {
+  return `PrismaRepository_${name}`;
 }
 
 /**
@@ -20,7 +24,7 @@ export function createRepositoryProviers() {
  */
 export function InjectRepository(name: PrismaDelegateNames) {
   prismaRepositories.add(name);
-  return Inject(`${name}PrismaRepository`);
+  return Inject(getRepositoryToken(name));
 }
 
 type TestDelegate = { findMany: (args: any) => any };

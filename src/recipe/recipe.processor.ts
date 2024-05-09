@@ -24,9 +24,8 @@ export class RecipeProcessor {
 
   @OnQueueCompleted()
   async onQueueCompleted(job: Job, result: unknown) {
+    console.log('onQueueCompleted', 1);
     const id = String(job.id);
-
-    await this.recipeService.createProjection(id);
   }
 
   @OnQueueFailed()

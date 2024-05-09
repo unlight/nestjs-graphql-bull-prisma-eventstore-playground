@@ -67,7 +67,7 @@ function graphqlModuleFactory(logger: Logger): ApolloDriverConfig {
         return error instanceof BadRequestException ||
           error instanceof GraphQLError
           ? SevenBoom.badRequest(error as any)
-          : SevenBoom.badImplementation(error, { errorMessage: error.message });
+          : SevenBoom.badImplementation(error, { details: error.message });
       },
     }),
   };

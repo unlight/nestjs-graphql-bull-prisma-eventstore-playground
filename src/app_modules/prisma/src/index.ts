@@ -1,4 +1,7 @@
-export { InjectRepository } from './inject-repository.decorator';
+export {
+  InjectRepository,
+  getRepositoryToken,
+} from './inject-repository.decorator';
 export { PrismaModule } from './prisma.module';
 export type {
   PrismaModuleAsyncOptions,
