@@ -1,24 +1,15 @@
+import { GraphqlRequestFunction, createGraphqlRequest } from '@/test-utils';
+import { getQueueToken } from '@nestjs/bull';
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { expect } from 'expect';
-import { ResultOf, VariablesOf, graphql } from 'gql.tada';
-import { GraphQLError, print } from 'graphql';
-import request from 'supertest';
-import { AppModule, configureApp } from '../app.module';
-import { ErrorPayload, ErrorResult } from 'graphql-apollo-errors';
-import { setTimeout } from 'node:timers/promises';
-import { InjectQueue, getQueueToken } from '@nestjs/bull';
 import { Queue } from 'bull';
+import { expect } from 'expect';
+import { graphql } from 'gql.tada';
+import { AppModule, configureApp } from '../app.module';
 import { RecipeService } from '../recipe/recipe.service';
-import { Recipe } from '../recipe/recipe.providers';
 
 let app: INestApplication;
-let server: any;
-
-type GraphQLResult<D> = {
-  data: ResultOf<D>;
-  errors?: ErrorPayload[];
-};
+let graphqlRequest: GraphqlRequestFunction;
 
 before(async () => {
   const testingModule = await Test.createTestingModule({
@@ -29,7 +20,7 @@ before(async () => {
   // app.useLogger(false);
 
   await app.init();
-  server = app.getHttpServer();
+  graphqlRequest = createGraphqlRequest(app.getHttpServer());
 });
 
 it('smoke', () => {
@@ -45,17 +36,11 @@ it('read recipes', async () => {
     }
   `);
 
-  const result = await request(server)
-    .post('/graphql')
-    .send({
-      query: print(recipesQuery),
-      variables: {},
-    })
-    .expect(200)
-    .then(response => response.body.data);
+  const { data, error } = await graphqlRequest(recipesQuery);
 });
 
 it('create recipe ok', async () => {
+  // Arrange
   const queue: Queue = await app.resolve(getQueueToken('recipe'));
   const service = await app.resolve(RecipeService);
   const createRecipe = graphql(/* GraphQL */ `
@@ -63,27 +48,17 @@ it('create recipe ok', async () => {
       addRecipe(data: $data)
     }
   `);
-  type Variables = VariablesOf<typeof createRecipe>;
-  const { data, errors }: GraphQLResult<typeof createRecipe> = await request(
-    server,
-  )
-    .post('/graphql')
-    .send({
-      query: print(createRecipe),
-      variables: {
-        data: {
-          description: null,
-          ingredients: [],
-          title: 'unrelishing',
-        },
-      } satisfies VariablesOf<typeof createRecipe>,
-    })
-    .then(response => response.body);
-
+  // Act
+  const { data, errors } = await graphqlRequest(createRecipe, {
+    data: {
+      description: null,
+      ingredients: [],
+      title: 'unrelishing',
+    },
+  });
   expect(errors).toBeFalsy();
-
   await queue.whenCurrentJobsFinished();
-
+  // Assert
   const recipe = await service.findOneById(data.addRecipe);
   expect(recipe).toEqual(
     expect.objectContaining({

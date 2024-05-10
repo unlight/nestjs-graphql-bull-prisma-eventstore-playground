@@ -35,7 +35,8 @@
       "@/nestjs-prisma": ["./src/app_modules/prisma/src"],
       "@/global-exception-filter": [
         "./src/app_modules/global-exception-filter/src"
-      ]
+      ],
+      "@/test-utils": ["./src/app_modules/test-utils"]
     },
     "plugins": [
       {

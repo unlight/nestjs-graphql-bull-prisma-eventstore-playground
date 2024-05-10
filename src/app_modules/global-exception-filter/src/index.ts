@@ -12,7 +12,7 @@ import { JsonObject } from 'type-fest';
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
-  private readonly logger = new Logger(this.constructor.name);
+  private readonly logger = new Logger('GlobalException');
 
   catch(exception: unknown, host: ArgumentsHost) {
     const error = ensure(exception);
