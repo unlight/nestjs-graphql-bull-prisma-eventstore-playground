@@ -18,7 +18,9 @@
     "test:w": "npm run test:r -- -w",
     "mocha": "node -r ts-node/register node_modules/mocha/bin/mocha",
     "prisma:g": "prisma generate",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "graphqlschema:g": "ts-node scripts/generate-graphql-schema.ts",
+    "graphqlenv:g": "ts-node scripts/generate-graphql-env.ts"
   },
   "license": "ISC",
   "type": "commonjs",

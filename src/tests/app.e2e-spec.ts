@@ -23,6 +23,10 @@ before(async () => {
   graphqlRequest = createGraphqlRequest(app.getHttpServer());
 });
 
+after(async () => {
+  await app.close();
+});
+
 it('smoke', () => {
   expect(app).toBeTruthy();
 });
@@ -68,6 +72,32 @@ it('create recipe ok', async () => {
   );
 });
 
-after(async () => {
-  await app.close();
+it('add recipe with non uniq code', async () => {
+  // Arrange
+  const queue: Queue = await app.resolve(getQueueToken('recipe'));
+  const service = await app.resolve(RecipeService);
+  const createRecipe = graphql(/* GraphQL */ `
+    mutation addRecipe($data: NewRecipeInput!) {
+      addRecipe(data: $data)
+    }
+  `);
+  // Act
+  const { data, errors } = await graphqlRequest(createRecipe, {
+    data: {
+      code: '1',
+      description: null,
+      ingredients: [],
+      title: 'unrelishing',
+    },
+  });
+  expect(errors).toBeFalsy();
+  await queue.whenCurrentJobsFinished();
+  // Assert
+  const recipe = await service.findOneById(data.addRecipe);
+  expect(recipe).toEqual(
+    expect.objectContaining({
+      id: data.addRecipe,
+      title: 'unrelishing',
+    }),
+  );
 });

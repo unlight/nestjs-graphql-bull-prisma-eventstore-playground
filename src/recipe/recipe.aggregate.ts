@@ -28,6 +28,7 @@ export class Recipe extends AggregateRoot {
         addedAt: new Date(),
         id: this.id,
         title: data.title,
+        code: data.code,
       }),
     );
   }

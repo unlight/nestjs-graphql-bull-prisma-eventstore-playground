@@ -4,6 +4,7 @@ type RecipeAddedData = {
   title: string;
   id: string;
   addedAt: Date;
+  code?: string;
 };
 
 export class RecipeAdded extends Event<RecipeAddedData> {}
