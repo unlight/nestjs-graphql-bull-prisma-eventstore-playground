@@ -29,8 +29,8 @@ export class RecipeProcessor {
   }
 
   @OnQueueFailed()
-  async onQueueFailed(job: Job, err: Error) {
-    this.logger.error(err);
+  async onQueueFailed(job: Job, error: Error) {
+    this.logger.error(error);
     const id = String(job.id);
   }
 }

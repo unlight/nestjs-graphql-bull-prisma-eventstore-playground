@@ -47,7 +47,7 @@ export class RecipeResolver {
   }
 
   @Mutation(() => String)
-  async addRecipe(@Args('data') data: NewRecipeInput): Promise<String> {
+  async addRecipe(@Args('data') data: NewRecipeInput): Promise<string> {
     const job = await this.queue.add('addRecipe', data, {
       jobId: createId(),
     });

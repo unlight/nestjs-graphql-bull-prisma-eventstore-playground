@@ -1,4 +1,4 @@
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ApolloDriver } from '@nestjs/apollo';
 import { BullModule } from '@nestjs/bull';
 import {
   BadRequestException,
@@ -21,46 +21,12 @@ import {
 import { AppEnvironment } from './app.environment';
 import * as Modules from './modules';
 
-@Module({
-  imports: [
-    Modules.Nestolog,
-    Modules.Environment,
-    Modules.Prisma,
-    CqrxModule.forRootAsync({
-      useFactory(env: AppEnvironment) {
-        return {
-          eventstoreDbConnectionString: env.eventstoreDbConnectionString,
-        };
-      },
-      inject: [AppEnvironment],
-    }),
-    GraphQLModule.forRootAsync({
-      imports: [Modules.Nestolog],
-      driver: ApolloDriver,
-      inject: [Logger],
-      useFactory: graphqlModuleFactory,
-    }),
-    BullModule.forRootAsync({
-      imports: [Modules.Environment],
-      inject: [AppEnvironment],
-      useFactory(env: AppEnvironment) {
-        return {
-          url: env.redisConnectionString,
-        };
-      },
-    }),
-    RecipeModule,
-  ],
-})
-export class AppModule {}
-
-function graphqlModuleFactory(logger: Logger): ApolloDriverConfig {
-  return {
-    autoSchemaFile: '~schema.gql',
-    sortSchema: true,
-    installSubscriptionHandlers: true,
-    formatError: formatErrorGenerator({
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+const GraphQLRootModule = GraphQLModule.forRootAsync({
+  imports: [Modules.Nestolog],
+  driver: ApolloDriver,
+  inject: [Logger],
+  useFactory: (logger: Logger) => {
+    const formatError = formatErrorGenerator({
       logger: logger as any,
       hideSensitiveData: false,
       nonBoomTransformer: error => {
@@ -69,9 +35,45 @@ function graphqlModuleFactory(logger: Logger): ApolloDriverConfig {
           ? SevenBoom.badRequest(error as any)
           : SevenBoom.badImplementation(error, { details: error.message });
       },
+    });
+
+    return {
+      autoSchemaFile: '~schema.gql',
+      sortSchema: true,
+      installSubscriptionHandlers: true,
+      formatError,
+    };
+  },
+});
+
+@Module({
+  imports: [
+    Modules.Nestolog,
+    Modules.Environment,
+    Modules.Prisma,
+    CqrxModule.forRootAsync({
+      useFactory(environment: AppEnvironment) {
+        return {
+          eventstoreDbConnectionString:
+            environment.eventstoreDbConnectionString,
+        };
+      },
+      inject: [AppEnvironment],
     }),
-  };
-}
+    GraphQLRootModule,
+    BullModule.forRootAsync({
+      imports: [Modules.Environment],
+      inject: [AppEnvironment],
+      useFactory(environment: AppEnvironment) {
+        return {
+          url: environment.redisConnectionString,
+        };
+      },
+    }),
+    RecipeModule,
+  ],
+})
+export class AppModule {}
 
 export function configureApp(app: INestApplication) {
   app.enableCors();

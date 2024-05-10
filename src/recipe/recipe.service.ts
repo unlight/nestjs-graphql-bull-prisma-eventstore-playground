@@ -40,8 +40,8 @@ export class RecipeService {
 
   createProjection(recipe: RecipeAggregate): Promise<any>;
   createProjection(id: string): Promise<any>;
-  async createProjection(arg: string | RecipeAggregate): Promise<any> {
-    const [id, recipe] = await this.parseStreamIdAggregate(arg);
+  async createProjection(argument: string | RecipeAggregate): Promise<any> {
+    const [id, recipe] = await this.parseStreamIdAggregate(argument);
     const data: Prisma.RecipeCreateInput = {
       title: recipe.title,
       creationDate: recipe.addedAt,
@@ -55,13 +55,13 @@ export class RecipeService {
   }
 
   private async parseStreamIdAggregate(
-    arg: string | RecipeAggregate,
+    argument: string | RecipeAggregate,
   ): Promise<[string, RecipeAggregate]> {
-    if (typeof arg === 'string') {
-      const recipe = await this.aggregateRepository.findOne(arg);
-      return [arg, recipe];
+    if (typeof argument === 'string') {
+      const recipe = await this.aggregateRepository.findOne(argument);
+      return [argument, recipe];
     }
-    return [arg.id, arg];
+    return [argument.id, argument];
   }
 
   async findOneById(id: string): Promise<RecipeObject | null> {

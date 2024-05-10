@@ -39,7 +39,5 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
 export function exceptionFactory(validationErrors: ValidationError[]) {
   const message = validationErrorsAsString(validationErrors);
-  const result = new BadRequestException(message);
-
-  return result;
+  return new BadRequestException(message);
 }
