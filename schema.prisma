@@ -14,6 +14,7 @@ model Recipe {
   id String @id @default(cuid()) @map("_id")
   isAggregating Boolean @default(false)
   title String
+  code String? @unique @default(cuid()) // mongodb doesnt allow null unique
   description String @default("")
   creationDate DateTime @default(now())
   ingredients String[]
