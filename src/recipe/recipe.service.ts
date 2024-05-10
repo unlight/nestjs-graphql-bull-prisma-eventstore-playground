@@ -43,12 +43,12 @@ export class RecipeService {
   async createProjection(argument: string | RecipeAggregate): Promise<any> {
     const [id, recipe] = await this.parseStreamIdAggregate(argument);
     const data: Prisma.RecipeCreateInput = {
-      title: recipe.title,
       creationDate: recipe.addedAt,
       description: recipe.description,
       // ingredients: recipe.ingredients,
       id: id,
       isAggregating: false,
+      title: recipe.title,
     };
 
     return await this.viewRepository.create({ data });
@@ -73,7 +73,7 @@ export class RecipeService {
   }
 
   async markAsError(id: string, error: string) {
-    await this.viewRepository.update({ where: { id }, data: { title: '' } });
+    await this.viewRepository.update({ data: { title: '' }, where: { id } });
   }
 
   // handleCreateError(eventError: EventError): RemoveCountry | undefined {

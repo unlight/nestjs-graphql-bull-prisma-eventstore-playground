@@ -25,8 +25,8 @@ export class Recipe extends AggregateRoot {
 
     this.apply(
       new RecipeAdded({
-        id: this.id,
         addedAt: new Date(),
+        id: this.id,
         title: data.title,
       }),
     );

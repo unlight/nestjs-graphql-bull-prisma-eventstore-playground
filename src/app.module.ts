@@ -22,13 +22,13 @@ import { AppEnvironment } from './app.environment';
 import * as Modules from './modules';
 
 const GraphQLRootModule = GraphQLModule.forRootAsync({
-  imports: [Modules.Nestolog],
   driver: ApolloDriver,
+  imports: [Modules.Nestolog],
   inject: [Logger],
   useFactory: (logger: Logger) => {
     const formatError = formatErrorGenerator({
-      logger: logger as any,
       hideSensitiveData: false,
+      logger: logger as any,
       nonBoomTransformer: error => {
         return error instanceof BadRequestException ||
           error instanceof GraphQLError
@@ -39,9 +39,9 @@ const GraphQLRootModule = GraphQLModule.forRootAsync({
 
     return {
       autoSchemaFile: '~schema.gql',
-      sortSchema: true,
-      installSubscriptionHandlers: true,
       formatError,
+      installSubscriptionHandlers: true,
+      sortSchema: true,
     };
   },
 });
@@ -52,13 +52,13 @@ const GraphQLRootModule = GraphQLModule.forRootAsync({
     Modules.Environment,
     Modules.Prisma,
     CqrxModule.forRootAsync({
+      inject: [AppEnvironment],
       useFactory(environment: AppEnvironment) {
         return {
           eventstoreDbConnectionString:
             environment.eventstoreDbConnectionString,
         };
       },
-      inject: [AppEnvironment],
     }),
     GraphQLRootModule,
     BullModule.forRootAsync({
@@ -80,11 +80,11 @@ export function configureApp(app: INestApplication) {
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.useGlobalPipes(
     new ValidationPipe({
+      exceptionFactory,
       transform: true,
       validationError: {
         target: false,
       },
-      exceptionFactory,
     }),
   );
   app.useLogger(app.get(NestoLogger));

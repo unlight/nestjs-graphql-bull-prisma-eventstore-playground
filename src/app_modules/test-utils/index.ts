@@ -22,6 +22,6 @@ export function createGraphqlRequest(server) {
         variables,
       })
       .then(response => response.body);
-    return { data, errors, error: errors?.[0] };
+    return { data, error: errors?.[0], errors };
   };
 }

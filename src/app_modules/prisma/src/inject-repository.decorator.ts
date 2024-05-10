@@ -7,8 +7,8 @@ const prismaRepositories = new Set<PrismaDelegateNames>();
 export function createRepositoryProviers() {
   return [...prismaRepositories].map(name => {
     return {
-      provide: getRepositoryToken(name),
       inject: [PrismaRepository],
+      provide: getRepositoryToken(name),
       useFactory: (prisma: PrismaRepository) => prisma[name],
     };
   });

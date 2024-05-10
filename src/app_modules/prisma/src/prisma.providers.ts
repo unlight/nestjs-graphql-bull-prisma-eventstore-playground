@@ -3,8 +3,8 @@ import { ModuleMetadata, Provider, Type } from '@nestjs/common';
 export const PRISMA_OPTIONS = Symbol('PRISMA_OPTIONS');
 
 export const defaultPrismaOptions = {
-  logQueries: false,
   datasourceUrl: undefined as string | undefined,
+  logQueries: false,
 };
 
 export type PrismaModuleOptions = Partial<typeof defaultPrismaOptions>;
@@ -45,6 +45,7 @@ export function createAsyncOptionsProvider(
 ): Provider {
   if (options.useFactory) {
     return {
+      inject: options.inject || [],
       provide: PRISMA_OPTIONS,
       useFactory: async (...args: any[]) => {
         // eslint-disable-next-line sonarjs/prefer-immediate-return
@@ -54,16 +55,15 @@ export function createAsyncOptionsProvider(
         };
         return result;
       },
-      inject: options.inject || [],
     };
   }
 
   return {
-    provide: PRISMA_OPTIONS,
-    useFactory: (factory: PrismaOptionsFactory) =>
-      factory.createPrismaOptions(),
     inject: [
       (options.useClass || options.useExisting) as Type<PrismaOptionsFactory>,
     ],
+    provide: PRISMA_OPTIONS,
+    useFactory: (factory: PrismaOptionsFactory) =>
+      factory.createPrismaOptions(),
   };
 }

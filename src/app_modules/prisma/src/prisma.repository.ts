@@ -27,8 +27,8 @@ export class PrismaRepository
       log: options.logQueries
         ? [
             {
-              level: 'query',
               emit: 'event',
+              level: 'query',
             },
           ]
         : undefined,
@@ -38,12 +38,12 @@ export class PrismaRepository
       this.$on(
         'query' as never,
         createPrismaQueryEventHandler({
+          colorParameter: '\u001B[90m',
+          colorQuery: '\u001B[96m',
+          format: false,
           logger: query => {
             this.logger.verbose(query, 'PrismaClient');
           },
-          format: false,
-          colorQuery: '\u001B[96m',
-          colorParameter: '\u001B[90m',
         }),
       );
     }
