@@ -26,11 +26,17 @@ export class RecipeService {
     const recipe = new RecipeAggregate(recipeId);
     await recipe.addRecipe(objectData);
     await this.aggregateRepository.save(recipe);
-    const [error, recipeAdded] = await to(this.createProjection(recipeId));
+    const [error, recipeAdded] = await to(
+      (async () => {
+        if (recipe.code) await this.validateUniqCode(recipeId, recipe.code);
+        await this.createProjection(recipeId);
+      })(),
+    );
 
     if (error) {
-      recipe.removeRecipe({ reason: error.message });
+      recipe.removeRecipe({ reason: error.message?.trim() });
       await this.aggregateRepository.save(recipe);
+      await this.createProjection(recipe);
 
       return;
     }
@@ -49,6 +55,8 @@ export class RecipeService {
       id: id,
       isAggregating: false,
       title: recipe.title,
+      code: recipe.code,
+      isActive: recipe.isActive,
     };
 
     return await this.viewRepository.create({ data });
@@ -74,6 +82,15 @@ export class RecipeService {
 
   async markAsError(id: string, error: string) {
     await this.viewRepository.update({ data: { title: '' }, where: { id } });
+  }
+
+  async validateUniqCode(exceptId: string, code: string) {
+    const recipe = await this.viewRepository.findFirst({
+      where: { code, NOT: { id: exceptId } },
+    });
+    if (recipe) {
+      throw new TypeError(`Code exists in ${recipe.id}`);
+    }
   }
 
   // handleCreateError(eventError: EventError): RemoveCountry | undefined {

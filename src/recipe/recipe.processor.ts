@@ -24,13 +24,14 @@ export class RecipeProcessor {
 
   @OnQueueCompleted()
   async onQueueCompleted(job: Job, result: unknown) {
-    console.log('onQueueCompleted', 1);
-    const id = String(job.id);
+    const jobId = String(job.id);
+    this.logger.log(`${job.name} queue completed ${jobId}`);
   }
 
   @OnQueueFailed()
   async onQueueFailed(job: Job, error: Error) {
+    const jobId = String(job.id);
+    this.logger.log(`${job.name} queue failed ${jobId}`);
     this.logger.error(error);
-    const id = String(job.id);
   }
 }

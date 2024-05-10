@@ -1,7 +1,9 @@
+import { Queue } from 'bull';
 import { ResultOf, TadaDocumentNode, VariablesOf } from 'gql.tada';
 import { print } from 'graphql';
 import { ErrorPayload } from 'graphql-apollo-errors';
 import request from 'supertest';
+import { setTimeout } from 'node:timers/promises';
 
 type GraphQLRequestResult<Q> = {
   data: ResultOf<Q>;
@@ -24,4 +26,13 @@ export function createGraphqlRequest(server) {
       .then(response => response.body);
     return { data, error: errors?.[0], errors };
   };
+}
+
+export async function waitWhenAllJobsFinished(queue: Queue) {
+  let count = 0;
+  do {
+    await setTimeout(50);
+    await queue.whenCurrentJobsFinished();
+    count = await queue.getActiveCount();
+  } while (count > 0);
 }

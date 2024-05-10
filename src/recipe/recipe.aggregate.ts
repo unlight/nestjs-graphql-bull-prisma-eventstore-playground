@@ -11,13 +11,15 @@ export class Recipe extends AggregateRoot {
   isActive: boolean = false;
   removedAt?: Date;
   removeReason?: string;
+  code?: string;
 
   @EventHandler(RecipeAdded)
   RecipeAdded(event: RecipeAdded) {
-    const { addedAt, title } = event.data;
+    const { addedAt, title, code } = event.data;
     this.addedAt = addedAt;
     this.isActive = true;
     this.title = title;
+    this.code = code;
   }
 
   async addRecipe(objectData: ObjectType<NewRecipeInput>) {
