@@ -1,4 +1,11 @@
+import {
+  GlobalExceptionFilter,
+  exceptionFactory,
+} from '@/global-exception-filter';
+import { TaskModule } from '@/job-task';
 import { BullAdapter } from '@bull-board/api/bullAdapter';
+import { ExpressAdapter } from '@bull-board/express';
+import { BullBoardModule } from '@bull-board/nestjs';
 import { ApolloDriver } from '@nestjs/apollo';
 import { BullModule } from '@nestjs/bull';
 import {
@@ -14,15 +21,9 @@ import { GraphQLError } from 'graphql';
 import { SevenBoom, formatErrorGenerator } from 'graphql-apollo-errors';
 import { CqrxModule } from 'nestjs-cqrx';
 import { NestoLogger } from 'nestolog';
-import { RecipeModule } from './recipe/recipe.module';
-import {
-  GlobalExceptionFilter,
-  exceptionFactory,
-} from '@/global-exception-filter';
 import { AppEnvironment } from './app.environment';
-import * as Modules from './modules';
-import { ExpressAdapter } from '@bull-board/express';
-import { BullBoardModule } from '@bull-board/nestjs';
+import { RecipeModule } from './recipe/recipe.module'; // import 1
+import * as Modules from './modules'; // import 2
 
 const GraphQLRootModule = GraphQLModule.forRootAsync({
   driver: ApolloDriver,
@@ -82,6 +83,7 @@ const GraphQLRootModule = GraphQLModule.forRootAsync({
       name: 'recipe',
     }),
     RecipeModule,
+    TaskModule,
   ],
 })
 export class AppModule {}

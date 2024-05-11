@@ -36,7 +36,8 @@
       "@/global-exception-filter": [
         "./src/app_modules/global-exception-filter/src"
       ],
-      "@/test-utils": ["./src/app_modules/test-utils"]
+      "@/test-utils": ["./src/app_modules/test-utils"],
+      "@/job-task": ["./src/app_modules/job-task"]
     },
     "plugins": [
       {

@@ -23,16 +23,26 @@ export class Recipe extends AggregateRoot {
     this.code = code;
   }
 
-  async addRecipe(objectData: ObjectType<NewRecipeInput>) {
+  async addRecipe(
+    objectData: ObjectType<NewRecipeInput>,
+    findExisting: (
+      exceptId: string,
+      code?: string,
+    ) => Promise<string | undefined>,
+  ) {
     const data = await transformAndValidate(NewRecipeInput, objectData);
+    const existsId = await findExisting(this.id, data.code);
+    if (existsId) {
+      throw new Error(`Code exists in ${existsId}`);
+    }
 
     this.apply(
       new RecipeAdded({
         addedAt: new Date(),
         code: data.code,
         id: this.id,
-        title: data.title,
         ingredients: data.ingredients,
+        title: data.title,
       }),
     );
   }

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { ensure } from 'errorish';
 import { PubSub } from 'graphql-subscriptions';
-import { fromPromise } from 'neverthrow';
+import { Err, err, errAsync, fromPromise, ok, okAsync } from 'neverthrow';
 import { ObjectType } from 'simplytyped';
 import { NewRecipeInput } from './dto/new-recipe.input';
 import { RecipesArgs } from './dto/recipes.args';
@@ -25,23 +25,30 @@ export class RecipeService {
     objectData: ObjectType<NewRecipeInput>,
   ): Promise<void> {
     const recipe = new RecipeAggregate(recipeId);
-    await recipe.addRecipe(objectData);
+    await recipe.addRecipe(objectData, async () => void 0);
     await this.aggregateRepository.save(recipe);
 
-    await fromPromise(this.validateUniqCode(recipeId, recipe.code), error =>
-      ensure(error),
-    )
-      .map(() => this.createProjection(recipeId))
-      .match(
-        async recipeAdded => {
-          await this.pubSub.publish('recipeAdded', { recipeAdded });
-        },
-        async error => {
-          recipe.removeRecipe({ reason: error.message.trim() });
-          await this.aggregateRepository.save(recipe);
-          await this.createProjection(recipe);
-        },
-      );
+    await fromPromise(
+      (async () => {
+        const result = await this.createProjection(recipeId);
+        // Emulate createProjection error (unique key constraint)
+        const existsId = await this.findExisting(recipeId, recipe.code);
+        if (existsId) {
+          throw new Error(`Unique code exists ${existsId}`);
+        }
+        return result;
+      })(),
+      error => ensure(error),
+    ).match(
+      async recipeAdded => {
+        await this.pubSub.publish('recipeAdded', { recipeAdded });
+      },
+      async error => {
+        recipe.removeRecipe({ reason: error.message.trim() });
+        await this.aggregateRepository.save(recipe);
+        await this.updateProjection(recipe.id);
+      },
+    );
   }
 
   private createProjection(
@@ -57,8 +64,8 @@ export class RecipeService {
       code: recipe.code,
       creationDate: recipe.addedAt,
       description: recipe.description,
-      ingredients: recipe.ingredients,
       id: id,
+      ingredients: recipe.ingredients,
       isActive: recipe.isActive,
       isAggregating: false,
       title: recipe.title,
@@ -79,43 +86,36 @@ export class RecipeService {
     await this.viewRepository.update({ data: { title: '' }, where: { id } });
   }
 
-  private async validateUniqCode(exceptId: string, code?: string) {
+  private async findExisting(
+    exceptId: string,
+    code?: string,
+  ): Promise<string | undefined> {
     if (code == null) return;
     const recipe = await this.viewRepository.findFirst({
-      where: { NOT: { id: exceptId }, code },
+      select: { id: true },
+      where: { NOT: { id: exceptId }, code, isActive: true },
     });
-    if (recipe) {
-      throw new Error(`Code exists in ${recipe.id}`);
-    }
+
+    return recipe?.id;
   }
 
-  // handleCreateError(eventError: EventError): RemoveCountry | undefined {
-  //   if (
-  //     EventError.is<CountryAdded, Prisma.PrismaClientKnownRequestError>(
-  //       eventError,
-  //     )
-  //   ) {
-  //     return new RemoveCountry(
-  //       eventError.event.data.id,
-  //       eventError.cause?.message || 'Unknown error',
-  //     );
-  //   }
-  // }
+  private async updateProjection(id: string) {
+    await this.viewRepository.update({
+      data: { isAggregating: true },
+      where: { id },
+    });
 
-  // async updateProjection(id: string) {
-  //   await this.viewRepository.update({
-  //     data: { isAggregating: true },
-  //     where: { id },
-  //   });
+    const recipe = await this.aggregateRepository.load(id);
+    const data: Prisma.RecipeUpdateInput = {
+      code: recipe.code,
+      creationDate: recipe.addedAt,
+      description: recipe.description,
+      ingredients: recipe.ingredients,
+      isActive: recipe.isActive,
+      isAggregating: false,
+      title: recipe.title,
+    };
 
-  //   const country = await this.aggregateRepository.findOne(id);
-  //   const data: Prisma.CountryUpdateInput = {
-  //     code: country.code,
-  //     name: country.name,
-  //     addedAt: country.addedAt,
-  //     isAggregating: false,
-  //   };
-
-  //   await this.viewRepository.update({ data, where: { id } });
-  // }
+    await this.viewRepository.update({ data, where: { id } });
+  }
 }
