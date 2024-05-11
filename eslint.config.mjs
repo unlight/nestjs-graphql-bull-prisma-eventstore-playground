@@ -1,20 +1,19 @@
+import 'eslint-plugin-only-warn';
+
 import globals from 'globals';
 import pluginJs from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import sonarjs from 'eslint-plugin-sonarjs';
 import prettier from 'eslint-plugin-prettier/recommended';
-// @ts-expect-error missing types
 import * as unicorn from 'eslint-plugin-unicorn';
-// @ts-expect-error missing types
 import perfectionist from 'eslint-plugin-perfectionist';
-import 'eslint-plugin-only-warn';
 
 /** @type {import('@typescript-eslint/utils').TSESLint.FlatConfig.ConfigFile} */
 export default [
   {
     ignores: ['dist/', 'coverage/', 'eslint.tsconfig.mjs'],
     languageOptions: {
-      globals: globals.browser,
+      globals: globals.node,
       parserOptions: {
         project: ['./tsconfig.json'],
         warnOnUnsupportedTypeScriptVersion: false,

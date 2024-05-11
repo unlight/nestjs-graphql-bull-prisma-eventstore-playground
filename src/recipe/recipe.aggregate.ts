@@ -15,7 +15,7 @@ export class Recipe extends AggregateRoot {
 
   @EventHandler(RecipeAdded)
   RecipeAdded(event: RecipeAdded) {
-    const { addedAt, title, code } = event.data;
+    const { addedAt, code, title } = event.data;
     this.addedAt = addedAt;
     this.isActive = true;
     this.title = title;
@@ -28,9 +28,9 @@ export class Recipe extends AggregateRoot {
     this.apply(
       new RecipeAdded({
         addedAt: new Date(),
+        code: data.code,
         id: this.id,
         title: data.title,
-        code: data.code,
       }),
     );
   }

@@ -50,14 +50,14 @@ export class RecipeService {
   ): Promise<Recipe.CreateResult> {
     const [id, recipe] = await this.parseStreamIdAggregate(argument);
     const data: Prisma.RecipeCreateInput = {
+      code: recipe.code,
       creationDate: recipe.addedAt,
       description: recipe.description,
       // ingredients: recipe.ingredients,
       id: id,
+      isActive: recipe.isActive,
       isAggregating: false,
       title: recipe.title,
-      code: recipe.code,
-      isActive: recipe.isActive,
     };
 
     return await this.viewRepository.create({ data });
@@ -87,7 +87,7 @@ export class RecipeService {
 
   async validateUniqCode(exceptId: string, code: string) {
     const recipe = await this.viewRepository.findFirst({
-      where: { code, NOT: { id: exceptId } },
+      where: { NOT: { id: exceptId }, code },
     });
     if (recipe) {
       throw new TypeError(`Code exists in ${recipe.id}`);

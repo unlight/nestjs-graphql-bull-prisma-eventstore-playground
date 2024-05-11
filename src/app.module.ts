@@ -74,12 +74,12 @@ const GraphQLRootModule = GraphQLModule.forRootAsync({
       },
     }),
     BullBoardModule.forRoot({
-      route: '/queues',
       adapter: ExpressAdapter,
+      route: '/queues',
     }),
     BullBoardModule.forFeature({
-      name: 'recipe',
       adapter: BullAdapter,
+      name: 'recipe',
     }),
     RecipeModule,
   ],

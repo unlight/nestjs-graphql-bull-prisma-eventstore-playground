@@ -17,6 +17,6 @@ export namespace Recipe {
   }
 
   type T = PrismaClient['recipe'];
-  type CreateDataArg = Prisma.Args<T, 'create'>['data'];
-  export type CreateResult = Prisma.Result<T, CreateDataArg, 'create'>;
+  type CreateDataArgument = Prisma.Args<T, 'create'>['data'];
+  export type CreateResult = Prisma.Result<T, CreateDataArgument, 'create'>;
 }
