@@ -367,10 +367,10 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-9.2.0.tgz#b0a9123e8e91a3d9a2eed3a04a6ed44fdab639aa"
   integrity sha512-ESiIudvhoYni+MdsI8oD7skpprZ89qKocwRM2KEvhhBJ9nl5MRh7BXU5GTod7Mdygq+AUl+QzId6iWJKR/wABA==
 
-"@eventstore/db-client@^6.1.0":
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/@eventstore/db-client/-/db-client-6.1.0.tgz#7071bf750129ab180a228354ebdb6b188c26522a"
-  integrity sha512-zn3hGPL3J7+ofVupKvpdtNS16w7BjWFDGtx0rQfMi5a68tluXcj2MCpFTD3VihTCBbCrEMxw7VUlOoRqtwj32A==
+"@eventstore/db-client@^6.2.1":
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/@eventstore/db-client/-/db-client-6.2.1.tgz#fd3703518cdbcc31fd4014064689103a3ed014de"
+  integrity sha512-utUkIO3Ns9TzTHOTDg+eVTm2Z/Jj5X3VT/otZEWwgmOm7CgSnrWdOxEsAN1jfMht7oVBRB5iGHYFGA3IiQm/Ng==
   dependencies:
     "@grpc/grpc-js" "^1.9.12"
     "@types/debug" "^4.1.12"
@@ -1887,10 +1887,10 @@ builtin-modules@^3.3.0:
   resolved "https://registry.yarnpkg.com/builtin-modules/-/builtin-modules-3.3.0.tgz#cae62812b89801e9656336e46223e030386be7b6"
   integrity sha512-zhaCDicdLuWN5UbN5IMnFqNMhNfo919sH85y2/ea+5Yg9TsTkeZxpL+JLbp6cgYFS4sRLp3YV4S6yDuqVWHYOw==
 
-bull@^4.12.2:
-  version "4.12.2"
-  resolved "https://registry.yarnpkg.com/bull/-/bull-4.12.2.tgz#302ee8f35fd37c31baf58817cce9a2c6930c3c5d"
-  integrity sha512-WPuc0VCYx+cIVMiZtPwRpWyyJFBrj4/OgKJ6n9Jf4tIw7rQNV+HAKQv15UDkcTvfpGFehvod7Fd1YztbYSJIDQ==
+bull@^4.12.3:
+  version "4.12.3"
+  resolved "https://registry.yarnpkg.com/bull/-/bull-4.12.3.tgz#3b767b719d7ee196e5ee20fcfe5d7bbeced71f7b"
+  integrity sha512-TGHuvHr6NYN6mQyHTFHJELdEu4JMCir8zcNd9Uv91qTWILiTpoglC3Un1PsxMwNXr49BVfdWE0xuB1nV4+cJPA==
   dependencies:
     cron-parser "^4.2.1"
     get-port "^5.1.1"
@@ -3841,10 +3841,10 @@ neo-async@^2.6.2:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-nestjs-cqrx@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/nestjs-cqrx/-/nestjs-cqrx-2.3.0.tgz#3a90ab97d1d4a08a9ed80617f50a94d91c89e52c"
-  integrity sha512-nkoNVK2AGAG3vammd+PH3M3BL0DbWgICOi67/PYj3DWv3VgB1KSkzFAiqDF7xkfjLTvJ3mKZexYEx7u0gjTQVw==
+nestjs-cqrx@^2.4.2:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/nestjs-cqrx/-/nestjs-cqrx-2.4.2.tgz#dc8209941ddca4589d075210e8c5fe085abf95d8"
+  integrity sha512-7T/tcYtJ+Z7dqCtRhM2sNjmmFIZuwKiWN6gCpXyQkpIytDrVHyfk6Wk42cZoHfpML745nHctvwiwSPNwa1PKag==
   dependencies:
     node-is-class "^1.0.4"
 

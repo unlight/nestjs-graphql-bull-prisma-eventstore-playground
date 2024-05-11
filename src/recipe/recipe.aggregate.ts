@@ -12,6 +12,7 @@ export class Recipe extends AggregateRoot {
   removedAt?: Date;
   removeReason?: string;
   code?: string;
+  ingredients?: string[];
 
   @EventHandler(RecipeAdded)
   RecipeAdded(event: RecipeAdded) {
@@ -31,6 +32,7 @@ export class Recipe extends AggregateRoot {
         code: data.code,
         id: this.id,
         title: data.title,
+        ingredients: data.ingredients,
       }),
     );
   }

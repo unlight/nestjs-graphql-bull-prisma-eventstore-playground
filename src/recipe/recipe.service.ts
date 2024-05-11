@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import to from 'await-to-js';
+import { ensure } from 'errorish';
 import { PubSub } from 'graphql-subscriptions';
+import { fromPromise } from 'neverthrow';
+import { ObjectType } from 'simplytyped';
 import { NewRecipeInput } from './dto/new-recipe.input';
 import { RecipesArgs } from './dto/recipes.args';
 import { Recipe as RecipeObject } from './models/recipe.model';
 import { Recipe as RecipeAggregate } from './recipe.aggregate';
 import { Recipe } from './recipe.providers';
-import { ObjectType } from 'simplytyped';
-import { ensure } from 'errorish';
 
 @Injectable()
 export class RecipeService {
@@ -27,33 +27,37 @@ export class RecipeService {
     const recipe = new RecipeAggregate(recipeId);
     await recipe.addRecipe(objectData);
     await this.aggregateRepository.save(recipe);
-    let recipeAdded: Recipe.CreateResult;
-    try {
-      if (recipe.code) await this.validateUniqCode(recipeId, recipe.code);
-      recipeAdded = await this.createProjection(recipeId);
-    } catch (exception) {
-      const error = ensure(exception);
-      recipe.removeRecipe({ reason: error.message.trim() });
-      await this.aggregateRepository.save(recipe);
-      await this.createProjection(recipe);
 
-      return;
-    }
-
-    this.pubSub.publish('recipeAdded', { recipeAdded });
+    await fromPromise(this.validateUniqCode(recipeId, recipe.code), error =>
+      ensure(error),
+    )
+      .map(() => this.createProjection(recipeId))
+      .match(
+        async recipeAdded => {
+          await this.pubSub.publish('recipeAdded', { recipeAdded });
+        },
+        async error => {
+          recipe.removeRecipe({ reason: error.message.trim() });
+          await this.aggregateRepository.save(recipe);
+          await this.createProjection(recipe);
+        },
+      );
   }
 
-  createProjection(recipe: RecipeAggregate): Promise<Recipe.CreateResult>;
-  createProjection(id: string): Promise<Recipe.CreateResult>;
-  async createProjection(
+  private createProjection(
+    recipe: RecipeAggregate,
+  ): Promise<Recipe.CreateResult>;
+  private createProjection(id: string): Promise<Recipe.CreateResult>;
+  private async createProjection(
     argument: string | RecipeAggregate,
   ): Promise<Recipe.CreateResult> {
-    const [id, recipe] = await this.parseStreamIdAggregate(argument);
+    const [id, recipe] =
+      await this.aggregateRepository.streamIdAndAggregate(argument);
     const data: Prisma.RecipeCreateInput = {
       code: recipe.code,
       creationDate: recipe.addedAt,
       description: recipe.description,
-      // ingredients: recipe.ingredients,
+      ingredients: recipe.ingredients,
       id: id,
       isActive: recipe.isActive,
       isAggregating: false,
@@ -61,16 +65,6 @@ export class RecipeService {
     };
 
     return await this.viewRepository.create({ data });
-  }
-
-  private async parseStreamIdAggregate(
-    argument: string | RecipeAggregate,
-  ): Promise<[string, RecipeAggregate]> {
-    if (typeof argument === 'string') {
-      const recipe = await this.aggregateRepository.findOne(argument);
-      return [argument, recipe];
-    }
-    return [argument.id, argument];
   }
 
   async findOneById(id: string): Promise<RecipeObject | null> {
@@ -85,12 +79,13 @@ export class RecipeService {
     await this.viewRepository.update({ data: { title: '' }, where: { id } });
   }
 
-  async validateUniqCode(exceptId: string, code: string) {
+  private async validateUniqCode(exceptId: string, code?: string) {
+    if (code == null) return;
     const recipe = await this.viewRepository.findFirst({
       where: { NOT: { id: exceptId }, code },
     });
     if (recipe) {
-      throw new TypeError(`Code exists in ${recipe.id}`);
+      throw new Error(`Code exists in ${recipe.id}`);
     }
   }
 
