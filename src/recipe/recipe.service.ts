@@ -8,6 +8,7 @@ import { Recipe as RecipeObject } from './models/recipe.model';
 import { Recipe as RecipeAggregate } from './recipe.aggregate';
 import { Recipe } from './recipe.providers';
 import { ObjectType } from 'simplytyped';
+import { ensure } from 'errorish';
 
 @Injectable()
 export class RecipeService {
@@ -26,15 +27,13 @@ export class RecipeService {
     const recipe = new RecipeAggregate(recipeId);
     await recipe.addRecipe(objectData);
     await this.aggregateRepository.save(recipe);
-    const [error, recipeAdded] = await to(
-      (async () => {
-        if (recipe.code) await this.validateUniqCode(recipeId, recipe.code);
-        await this.createProjection(recipeId);
-      })(),
-    );
-
-    if (error) {
-      recipe.removeRecipe({ reason: error.message?.trim() });
+    let recipeAdded: Recipe.CreateResult;
+    try {
+      if (recipe.code) await this.validateUniqCode(recipeId, recipe.code);
+      recipeAdded = await this.createProjection(recipeId);
+    } catch (exception) {
+      const error = ensure(exception);
+      recipe.removeRecipe({ reason: error.message.trim() });
       await this.aggregateRepository.save(recipe);
       await this.createProjection(recipe);
 
@@ -44,9 +43,11 @@ export class RecipeService {
     this.pubSub.publish('recipeAdded', { recipeAdded });
   }
 
-  createProjection(recipe: RecipeAggregate): Promise<any>;
-  createProjection(id: string): Promise<any>;
-  async createProjection(argument: string | RecipeAggregate): Promise<any> {
+  createProjection(recipe: RecipeAggregate): Promise<Recipe.CreateResult>;
+  createProjection(id: string): Promise<Recipe.CreateResult>;
+  async createProjection(
+    argument: string | RecipeAggregate,
+  ): Promise<Recipe.CreateResult> {
     const [id, recipe] = await this.parseStreamIdAggregate(argument);
     const data: Prisma.RecipeCreateInput = {
       creationDate: recipe.addedAt,

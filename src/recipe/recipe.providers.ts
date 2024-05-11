@@ -1,3 +1,4 @@
+import { Prisma, PrismaClient } from '@prisma/client';
 import { InjectRepository, PrismaRepository } from '@/nestjs-prisma';
 import { Recipe as RecipeAggregate } from './recipe.aggregate';
 import * as cqrx from 'nestjs-cqrx';
@@ -14,4 +15,8 @@ export namespace Recipe {
   export function InjectAggregateRepository() {
     return cqrx.InjectAggregateRepository(RecipeAggregate);
   }
+
+  type T = PrismaClient['recipe'];
+  type CreateDataArg = Prisma.Args<T, 'create'>['data'];
+  export type CreateResult = Prisma.Result<T, CreateDataArg, 'create'>;
 }

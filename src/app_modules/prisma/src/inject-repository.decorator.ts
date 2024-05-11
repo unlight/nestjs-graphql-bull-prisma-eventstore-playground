@@ -1,6 +1,6 @@
 import { PrismaRepository } from './prisma.repository';
 import { Inject } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { PrismaDelegateNames } from './types';
 
 const prismaRepositories = new Set<PrismaDelegateNames>();
 
@@ -26,10 +26,3 @@ export function InjectRepository(name: PrismaDelegateNames) {
   prismaRepositories.add(name);
   return Inject(getRepositoryToken(name));
 }
-
-type TestDelegate = { findMany: (args: any) => any };
-type PrismaDelegateNames = keyof {
-  [P in keyof PrismaClient as PrismaClient[P] extends TestDelegate
-    ? P
-    : never]: PrismaClient[P];
-};
