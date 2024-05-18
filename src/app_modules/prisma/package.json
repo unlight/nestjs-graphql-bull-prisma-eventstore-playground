@@ -1,4 +1,9 @@
 {
   "name": "nestjs-prisma",
-  "version": "0.0.0-dev"
+  "version": "0.0.0-dev",
+  "peerDependencies": {
+    "prisma-query-log": "3 - 4",
+    "@prisma/client": "4 - 6",
+    "@nestjs/common": "8 - 11"
+  }
 }

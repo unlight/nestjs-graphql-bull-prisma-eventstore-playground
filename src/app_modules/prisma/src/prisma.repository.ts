@@ -11,7 +11,7 @@ import { PrismaClient } from '@prisma/client';
 import { createPrismaQueryEventHandler } from 'prisma-query-log';
 
 /**
- * Prisma client as nest service.
+ * Prisma client as nestjs service.
  */
 @Injectable()
 export class PrismaRepository

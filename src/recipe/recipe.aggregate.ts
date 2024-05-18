@@ -1,9 +1,11 @@
-import { AggregateRoot, EventHandler } from 'nestjs-cqrx';
-import { RecipeRemoved, RecipeAdded } from './recipe.events';
-import { NewRecipeInput } from './dto/new-recipe.input';
+import { Injectable } from '@nestjs/common';
 import { transformAndValidate } from 'class-transformer-validator';
+import { AggregateRoot, EventHandler } from 'nestjs-cqrx';
 import { ObjectType } from 'simplytyped';
+import { NewRecipeInput } from './dto/new-recipe.input';
+import { RecipeAdded, RecipeRemoved } from './recipe.events';
 
+@Injectable()
 export class Recipe extends AggregateRoot {
   title: string = '';
   addedAt: Date = new Date('');

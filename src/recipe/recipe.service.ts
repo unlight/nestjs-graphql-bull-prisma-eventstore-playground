@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { ensure } from 'errorish';
 import { PubSub } from 'graphql-subscriptions';
-import { Err, err, errAsync, fromPromise, ok, okAsync } from 'neverthrow';
+import { fromPromise } from 'neverthrow';
 import { ObjectType } from 'simplytyped';
 import { NewRecipeInput } from './dto/new-recipe.input';
 import { RecipesArgs } from './dto/recipes.args';
@@ -24,9 +24,9 @@ export class RecipeService {
     recipeId: string,
     objectData: ObjectType<NewRecipeInput>,
   ): Promise<void> {
-    const recipe = new RecipeAggregate(recipeId);
+    const recipe = this.aggregateRepository.create(recipeId);
     await recipe.addRecipe(objectData, async () => void 0);
-    await this.aggregateRepository.save(recipe);
+    await recipe.commit();
 
     await fromPromise(
       (async () => {
