@@ -7,7 +7,7 @@ import { ObjectType } from 'simplytyped';
 import { NewRecipeInput } from './dto/new-recipe.input';
 import { RecipesArgs } from './dto/recipes.args';
 import { Recipe as RecipeObject } from './models/recipe.model';
-import { Recipe as RecipeAggregate } from './recipe.aggregate';
+import { RecipeAggregate } from './recipe.aggregate';
 import { Recipe } from './recipe.providers';
 
 @Injectable()

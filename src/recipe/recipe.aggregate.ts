@@ -3,10 +3,17 @@ import { transformAndValidate } from 'class-transformer-validator';
 import { AggregateRoot, EventHandler } from 'nestjs-cqrx';
 import { ObjectType } from 'simplytyped';
 import { NewRecipeInput } from './dto/new-recipe.input';
-import { RecipeAdded, RecipeRemoved } from './recipe.events';
+import {
+  HandleRecipeEvents,
+  RecipeAdded,
+  RecipeRemoved,
+} from './recipe.events';
 
 @Injectable()
-export class Recipe extends AggregateRoot {
+export class RecipeAggregate
+  extends AggregateRoot
+  implements HandleRecipeEvents
+{
   title: string = '';
   addedAt: Date = new Date('');
   description: string = '';
@@ -17,7 +24,7 @@ export class Recipe extends AggregateRoot {
   ingredients?: string[];
 
   @EventHandler(RecipeAdded)
-  RecipeAdded(event: RecipeAdded) {
+  applyRecipeAdded(event: RecipeAdded) {
     const { addedAt, code, title } = event.data;
     this.addedAt = addedAt;
     this.isActive = true;
@@ -62,7 +69,7 @@ export class Recipe extends AggregateRoot {
   }
 
   @EventHandler(RecipeRemoved)
-  RecipeRemoved(event: RecipeRemoved) {
+  applyRecipeRemoved(event: RecipeRemoved) {
     const { reason, removedAt } = event.data;
 
     this.isActive = false;

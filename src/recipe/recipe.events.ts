@@ -17,3 +17,10 @@ type RecipeRemovedData = {
 };
 
 export class RecipeRemoved extends Event<RecipeRemovedData> {}
+
+export type RecipeEvent = RecipeRemoved | RecipeAdded;
+
+export interface HandleRecipeEvents {
+  applyRecipeAdded: (event: RecipeAdded) => void;
+  applyRecipeRemoved: (event: RecipeRemoved) => void;
+}
