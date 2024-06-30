@@ -20,6 +20,8 @@ model Recipe {
   creationDate DateTime @default(now())
   ingredients String[]
   isActive Boolean
+  technicalIssues String[]
+  removeReason String
 }
 
 type RecipeIngredient {

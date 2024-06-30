@@ -32,6 +32,7 @@ export class RecipeService {
       (async () => {
         const result = await this.createProjection(recipeId);
         // Emulate createProjection error (unique key constraint)
+        // It should not be here
         const existsId = await this.findExisting(recipeId, recipe.code);
         if (existsId) {
           throw new Error(`Unique code exists ${existsId}`);

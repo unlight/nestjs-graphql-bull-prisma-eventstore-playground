@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
 import { transformAndValidate } from 'class-transformer-validator';
 import { AggregateRoot, EventHandler } from 'nestjs-cqrx';
 import { ObjectType } from 'simplytyped';
@@ -9,7 +8,6 @@ import {
   RecipeRemoved,
 } from './recipe.events';
 
-@Injectable()
 export class RecipeAggregate
   extends AggregateRoot
   implements HandleRecipeEvents

@@ -24,6 +24,7 @@ import { NestoLogger } from 'nestolog';
 import { AppEnvironment } from './app.environment';
 import { RecipeModule } from './recipe/recipe.module'; // import 1
 import * as Modules from './modules'; // import 2
+import { ConduitModule } from './conduit/conduit.module';
 
 const GraphQLRootModule = GraphQLModule.forRootAsync({
   driver: ApolloDriver,
