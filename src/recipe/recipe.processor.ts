@@ -33,5 +33,6 @@ export class RecipeProcessor {
     const jobId = String(job.id);
     this.logger.log(`${job.name} queue failed ${jobId}`);
     this.logger.error(error);
+    this.logger.error(error.cause);
   }
 }

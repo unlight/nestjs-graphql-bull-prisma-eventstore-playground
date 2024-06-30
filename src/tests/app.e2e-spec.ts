@@ -76,6 +76,44 @@ it('create recipe ok', async () => {
   );
 });
 
+it.only('create and remove', async () => {
+  // Arrange
+  const queue: Queue = await app.resolve(getQueueToken('recipe'));
+  const service = await app.resolve(RecipeService);
+  const createRecipe = graphql(/* GraphQL */ `
+    mutation addRecipe($data: NewRecipeInput!) {
+      addRecipe(data: $data)
+    }
+  `);
+  // Act
+  const { data, errors } = await graphqlRequest(createRecipe, {
+    data: {
+      description: 'playscript',
+      ingredients: [],
+      title: 'unfussed',
+    },
+  });
+  expect(errors).toBeFalsy();
+
+  const { data, errors } = await graphqlRequest(
+    graphql(/* GraphQL */ `
+      mutation removeRecipe($data: RemoveRecipeInput!) {
+        removeRecipe(data: $data)
+      }
+    `),
+    { data: { id: '', removeReason: '' } },
+  );
+  // await waitWhenAllJobsFinished(queue);
+  // // Assert
+  // const recipe = await service.findOneById(data.addRecipe);
+  // expect(recipe).toEqual(
+  //   expect.objectContaining({
+  //     id: data.addRecipe,
+  //     title: 'unrelishing',
+  //   }),
+  // );
+});
+
 it('revert recipe with non uniq code', async () => {
   // Arrange
   const queue: Queue = await app.resolve(getQueueToken('recipe'));

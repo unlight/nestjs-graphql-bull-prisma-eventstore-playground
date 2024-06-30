@@ -24,6 +24,7 @@ export class RecipeService {
     recipeId: string,
     objectData: ObjectType<NewRecipeInput>,
   ): Promise<void> {
+    debugger;
     const recipe = this.aggregateRepository.create(recipeId);
     await recipe.addRecipe(objectData, async () => void 0);
     await recipe.commit();
@@ -46,7 +47,7 @@ export class RecipeService {
       },
       async error => {
         recipe.removeRecipe({ reason: error.message.trim() });
-        await this.aggregateRepository.save(recipe);
+        await recipe.commit();
         await this.updateProjection(recipe.id);
       },
     );

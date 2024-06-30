@@ -12,6 +12,7 @@ export class RecipeAggregate
   extends AggregateRoot
   implements HandleRecipeEvents
 {
+  protected static readonly streamName = 'Recipe';
   title: string = '';
   addedAt: Date = new Date('');
   description: string = '';
