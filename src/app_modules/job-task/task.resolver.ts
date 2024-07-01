@@ -20,6 +20,7 @@ export class TaskResolver implements OnModuleInit {
     return {
       id: String(job.id),
       state,
+      failedReason: job.failedReason,
     };
   }
 

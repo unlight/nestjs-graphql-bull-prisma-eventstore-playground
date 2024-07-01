@@ -7,6 +7,9 @@ export class Task {
 
   @Field(() => TaskState, { nullable: false })
   state: TaskState = TaskState.PENDING;
+
+  @Field(() => String, { nullable: true })
+  failedReason?: string;
 }
 
 export enum TaskState {
