@@ -9,6 +9,7 @@ import { RecipesArgs } from './dto/recipes.args';
 import { Recipe as RecipeObject } from './models/recipe.model';
 import { RecipeAggregate } from './recipe.aggregate';
 import { Recipe } from './recipe.providers';
+import { RemoveRecipeInput } from './dto/remove-recipe.input';
 
 @Injectable()
 export class RecipeService {
@@ -51,6 +52,13 @@ export class RecipeService {
         await this.updateProjection(recipe.id);
       },
     );
+  }
+
+  async removeRecipe(data: ObjectType<RemoveRecipeInput>) {
+    const recipe = await this.aggregateRepository.load(data.id);
+    recipe.removeRecipe({ reason: data.removeReason });
+    await recipe.commit();
+    await this.updateProjection(data.id);
   }
 
   private createProjection(

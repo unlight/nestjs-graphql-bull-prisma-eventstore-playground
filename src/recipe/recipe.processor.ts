@@ -9,6 +9,7 @@ import { Job } from 'bull';
 import { ObjectType } from 'simplytyped';
 import { NewRecipeInput } from './dto/new-recipe.input';
 import { RecipeService } from './recipe.service';
+import { RemoveRecipeInput } from './dto/remove-recipe.input';
 
 @Processor('recipe')
 export class RecipeProcessor {
@@ -20,6 +21,11 @@ export class RecipeProcessor {
   async addRecipe(job: Job<ObjectType<NewRecipeInput>>) {
     const recipeId = job.id.toString();
     await this.recipeService.addRecipe(recipeId, job.data);
+  }
+
+  @Process('removeRecipe')
+  async removeRecipe(job: Job<ObjectType<RemoveRecipeInput>>) {
+    await this.recipeService.removeRecipe(job.data);
   }
 
   @OnQueueCompleted()

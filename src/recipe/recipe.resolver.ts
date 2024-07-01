@@ -17,6 +17,7 @@ import { createId } from '@paralleldrive/cuid2';
 import { PubSub } from 'graphql-subscriptions';
 import { GraphQLResolveInfo } from 'graphql';
 import { PrismaSelect } from '@paljs/plugins';
+import { RemoveRecipeInput } from './dto/remove-recipe.input';
 
 @Resolver(() => Recipe)
 export class RecipeResolver {
@@ -54,10 +55,11 @@ export class RecipeResolver {
     return String(job.id);
   }
 
-  // @Mutation(() => Boolean)
-  // async removeRecipe(@Args('id') id: string) {
-  //   return this.recipeService.remove(id);
-  // }
+  @Mutation(() => String)
+  async removeRecipe(@Args('data') data: RemoveRecipeInput): Promise<string> {
+    const job = await this.queue.add('removeRecipe', data);
+    return String(job.id);
+  }
 
   @Subscription(() => Recipe)
   recipeAdded() {

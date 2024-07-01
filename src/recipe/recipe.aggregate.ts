@@ -55,7 +55,7 @@ export class RecipeAggregate
     );
   }
 
-  removeRecipe(args: { reason: string }) {
+  removeRecipe(args: { reason?: string }) {
     const { reason } = args;
 
     this.apply(
