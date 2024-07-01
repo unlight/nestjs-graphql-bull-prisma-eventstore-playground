@@ -15,5 +15,9 @@
 
 ## TODO
 
-- Get rid of service.add (duplicate)
-- Conduit create article module https://realworld-docs.netlify.app/docs/specs/backend-specs/endpoints#create-article without auth
+- something with recipe service
+- drainDelay doesnt work
+
+## Issues
+
+- Unique keys with multiple null values not possible https://github.com/prisma/prisma/discussions/11558

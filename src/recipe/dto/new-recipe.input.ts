@@ -3,7 +3,7 @@ import { IsOptional, Length } from 'class-validator';
 
 @InputType()
 export class NewRecipeInput {
-  @Field()
+  @Field(() => String)
   @Length(2, 30)
   title: string = '';
 

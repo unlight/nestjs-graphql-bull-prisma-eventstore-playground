@@ -29,10 +29,12 @@ export function createGraphqlRequest(server) {
 }
 
 export async function waitWhenAllJobsFinished(queue: Queue) {
-  let count = 0;
-  do {
-    await setTimeout(50);
+  while (true) {
+    await setTimeout(100);
     await queue.whenCurrentJobsFinished();
-    count = await queue.getActiveCount();
-  } while (count > 0);
+    if (await queue.getActiveCount()) continue;
+    if (await queue.getWaitingCount()) continue;
+
+    break;
+  }
 }

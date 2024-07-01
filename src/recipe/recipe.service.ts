@@ -25,21 +25,13 @@ export class RecipeService {
     recipeId: string,
     objectData: ObjectType<NewRecipeInput>,
   ): Promise<void> {
-    debugger;
     const recipe = this.aggregateRepository.create(recipeId);
     await recipe.addRecipe(objectData, async () => void 0);
     await recipe.commit();
 
     await fromPromise(
       (async () => {
-        const result = await this.createProjection(recipeId);
-        // Emulate createProjection error (unique key constraint)
-        // It should not be here
-        const existsId = await this.findExisting(recipeId, recipe.code);
-        if (existsId) {
-          throw new Error(`Unique code exists ${existsId}`);
-        }
-        return result;
+        await this.createProjection(recipeId);
       })(),
       error => ensure(error),
     ).match(
@@ -57,7 +49,7 @@ export class RecipeService {
   async removeRecipe(data: ObjectType<RemoveRecipeInput>) {
     const recipe = await this.aggregateRepository.load(data.id);
     recipe.removeRecipe({ reason: data.removeReason });
-    await recipe.commit();
+    await this.aggregateRepository.save(recipe);
     await this.updateProjection(data.id);
   }
 
@@ -110,12 +102,22 @@ export class RecipeService {
   }
 
   private async updateProjection(id: string) {
+    const projection = await this.viewRepository.findUnique({
+      where: { id },
+      select: { id: true },
+    });
+
+    if (!projection) {
+      return;
+    }
+
     await this.viewRepository.update({
       data: { isAggregating: true },
       where: { id },
     });
 
     const recipe = await this.aggregateRepository.load(id);
+
     const data: Prisma.RecipeUpdateInput = {
       code: recipe.code,
       creationDate: recipe.addedAt,

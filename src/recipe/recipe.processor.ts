@@ -1,5 +1,7 @@
 import {
+  OnQueueActive,
   OnQueueCompleted,
+  OnQueueDrained,
   OnQueueFailed,
   Process,
   Processor,
@@ -28,17 +30,26 @@ export class RecipeProcessor {
     await this.recipeService.removeRecipe(job.data);
   }
 
+  @OnQueueActive()
+  async onQueueActive(job: Job) {
+    this.logger.verbose(`${job.name} (${job.id}) has started`);
+  }
+
   @OnQueueCompleted()
   async onQueueCompleted(job: Job, result: unknown) {
     const jobId = String(job.id);
-    this.logger.log(`${job.name} queue completed ${jobId}`);
+    this.logger.verbose(`${job.name} completed ${jobId}`);
   }
 
   @OnQueueFailed()
   async onQueueFailed(job: Job, error: Error) {
     const jobId = String(job.id);
-    this.logger.log(`${job.name} queue failed ${jobId}`);
     this.logger.error(error);
-    this.logger.error(error.cause);
+    this.logger.warn(`${job.name} failed ${jobId}`);
+  }
+
+  @OnQueueDrained()
+  async onQueueDrained() {
+    this.logger.verbose(`queue drained`);
   }
 }

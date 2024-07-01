@@ -7,7 +7,7 @@ import { BullAdapter } from '@bull-board/api/bullAdapter';
 import { ExpressAdapter } from '@bull-board/express';
 import { BullBoardModule } from '@bull-board/nestjs';
 import { ApolloDriver } from '@nestjs/apollo';
-import { BullModule } from '@nestjs/bull';
+import { BullModule, BullRootModuleOptions } from '@nestjs/bull';
 import {
   BadRequestException,
   INestApplication,
@@ -69,7 +69,7 @@ const GraphQLRootModule = GraphQLModule.forRootAsync({
     BullModule.forRootAsync({
       imports: [Modules.Environment],
       inject: [AppEnvironment],
-      useFactory(environment: AppEnvironment) {
+      useFactory(environment: AppEnvironment): BullRootModuleOptions {
         return {
           url: environment.redisConnectionString,
         };
@@ -78,10 +78,6 @@ const GraphQLRootModule = GraphQLModule.forRootAsync({
     BullBoardModule.forRoot({
       adapter: ExpressAdapter,
       route: '/queues',
-    }),
-    BullBoardModule.forFeature({
-      adapter: BullAdapter,
-      name: 'recipe',
     }),
     RecipeModule,
     TaskModule,

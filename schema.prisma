@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url = env("DATABASE_URL")
 }
 
@@ -15,7 +15,7 @@ model Recipe {
   isAggregating Boolean @default(false)
   title String
   /// Uniq code, test purpose check uniq in code
-  code String?
+  code String? @unique
   description String @default("")
   creationDate DateTime @default(now())
   ingredients String[]
@@ -24,6 +24,6 @@ model Recipe {
   removeReason String @default("")
 }
 
-type RecipeIngredient {
-  name String
-}
+// type RecipeIngredient {
+//   name String
+// }

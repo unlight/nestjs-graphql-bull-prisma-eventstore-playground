@@ -26,29 +26,42 @@ services:
     networks:
       - esdb_network
 
-  mongo1:
-    image: mongo:7.0
-    command: ['--replSet', 'rs0', '--bind_ip_all', '--port', '27017']
-    ports:
-      - 27017:27017
-    extra_hosts:
-      - 'host.docker.internal:host-gateway'
-    healthcheck:
-      test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'host.docker.internal:27017'}]}) }" | mongosh --port 27017 --quiet
-      interval: 5s
-      timeout: 30s
-      start_period: 0s
-      start_interval: 1s
-      retries: 30
-    volumes:
-      - 'mongo1_data:/data/db'
-      - 'mongo1_config:/data/configdb'
+  # mongo1:
+  #   image: mongo:7.0
+  #   command: ['--replSet', 'rs0', '--bind_ip_all', '--port', '27017']
+  #   ports:
+  #     - 27017:27017
+  #   extra_hosts:
+  #     - 'host.docker.internal:host-gateway'
+  #   healthcheck:
+  #     test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'host.docker.internal:27017'}]}) }" | mongosh --port 27017 --quiet
+  #     interval: 5s
+  #     timeout: 30s
+  #     start_period: 0s
+  #     start_interval: 1s
+  #     retries: 30
+  #   volumes:
+  #     - 'mongo1_data:/data/db'
+  #     - 'mongo1_config:/data/configdb'
 
   redis:
     image: redis:4-alpine
     restart: always
     ports:
       - '6379:6379'
+
+  postgres:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=nest_es_bull_pg
+      - DEBUG=false
+    ports:
+      - '5432:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
 
 networks:
   esdb_network:
@@ -59,3 +72,5 @@ volumes:
   mongo1_config:
   eventstore-volume-data:
   eventstore-volume-logs:
+  db:
+    driver: local
