@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { UserCreateInput } from './dto/user-create.input';
+// import { UserCreateInput } from './dto/user-create.input';
 import { Queue } from 'bull';
 import { InjectQueue } from '@nestjs/bull';
 
@@ -15,15 +15,15 @@ export class UserController {
   /**
    * Registration.
    */
-  @Post('users')
-  async createUser(@Body() userCreateInput: UserCreateInput) {
-    // const result = await this.service.createUser(request.body.user);
-    // const firstError = result.errors?.[0]?.extensions?.data;
-    // if (firstError) {
-    //     throw firstError;
-    // }
-    // return result;
-  }
+  // @Post('users')
+  // async createUser(@Body() userCreateInput: UserCreateInput) {
+  //   // const result = await this.service.createUser(request.body.user);
+  //   // const firstError = result.errors?.[0]?.extensions?.data;
+  //   // if (firstError) {
+  //   //     throw firstError;
+  //   // }
+  //   // return result;
+  // }
 
   // /**
   //  * Authentication.

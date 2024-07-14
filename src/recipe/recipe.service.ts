@@ -6,10 +6,10 @@ import { fromPromise } from 'neverthrow';
 import { ObjectType } from 'simplytyped';
 import { NewRecipeInput } from './dto/new-recipe.input';
 import { RecipesArgs } from './dto/recipes.args';
+import { RemoveRecipeInput } from './dto/remove-recipe.input';
 import { Recipe as RecipeObject } from './models/recipe.model';
 import { RecipeAggregate } from './recipe.aggregate';
 import { Recipe } from './recipe.providers';
-import { RemoveRecipeInput } from './dto/remove-recipe.input';
 
 @Injectable()
 export class RecipeService {
@@ -26,7 +26,7 @@ export class RecipeService {
     objectData: ObjectType<NewRecipeInput>,
   ): Promise<void> {
     const recipe = this.aggregateRepository.create(recipeId);
-    await recipe.addRecipe(objectData, async () => void 0);
+    await recipe.addRecipe({ findExisting: () => void 0, objectData });
     await recipe.commit();
 
     await fromPromise(

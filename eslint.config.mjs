@@ -34,6 +34,7 @@ export default [
         {
           replacements: {
             args: false,
+            e: false,
           },
         },
       ],

@@ -12,7 +12,7 @@ export class RecipeAdded extends Event<RecipeAddedData> {}
 
 type RecipeRemovedData = {
   id: string;
-  reason: string;
+  reason?: string;
   removedAt: Date;
 };
 

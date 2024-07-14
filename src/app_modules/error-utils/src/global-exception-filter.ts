@@ -1,12 +1,4 @@
-import {
-  ArgumentsHost,
-  BadRequestException,
-  Catch,
-  ExceptionFilter,
-  Logger,
-} from '@nestjs/common';
-import { ValidationError } from 'class-validator';
-import { validationErrorsAsString } from 'class-validator-flat-formatter';
+import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
 import { ensure } from 'errorish';
 import { JsonObject } from 'type-fest';
 
@@ -35,9 +27,4 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       if (value) exception[key] = value;
     }
   }
-}
-
-export function exceptionFactory(validationErrors: ValidationError[]) {
-  const message = validationErrorsAsString(validationErrors);
-  return new BadRequestException(message);
 }

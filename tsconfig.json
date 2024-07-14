@@ -3,9 +3,6 @@
   "ts-node": {
     "swc": true,
     "transpileOnly": true,
-    "moduleTypes": {
-      "webpack.config.js": "cjs"
-    },
     "compilerOptions": {
       "module": "commonjs"
     },
@@ -33,9 +30,7 @@
     "baseUrl": ".",
     "paths": {
       "@/nestjs-prisma": ["./src/app_modules/prisma/src"],
-      "@/global-exception-filter": [
-        "./src/app_modules/global-exception-filter/src"
-      ],
+      "@/error-utils": ["./src/app_modules/error-utils/src"],
       "@/test-utils": ["./src/app_modules/test-utils"],
       "@/job-task": ["./src/app_modules/job-task"]
     },

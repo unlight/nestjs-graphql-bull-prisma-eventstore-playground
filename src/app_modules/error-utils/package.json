@@ -1,5 +1,5 @@
 {
-  "name": "global-exception-filter",
+  "name": "error-utils",
   "version": "1.0.0",
   "main": "dist/index",
   "types": "dist/index",
@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "class-validator-flat-formatter": "^4.0.2",
-    "errorish": "^1.0.0"
+    "errorish": "^1.0.0",
+    "graphql-apollo-errors": "^2.0.3"
   },
   "peerDependencies": {
     "@nestjs/common": "^10.3.8",

@@ -1,15 +1,14 @@
 import {
   GlobalExceptionFilter,
+  createGraphqlFormatError,
   exceptionFactory,
-} from '@/global-exception-filter';
+} from '@/error-utils';
 import { TaskModule } from '@/job-task';
-import { BullAdapter } from '@bull-board/api/bullAdapter';
 import { ExpressAdapter } from '@bull-board/express';
 import { BullBoardModule } from '@bull-board/nestjs';
 import { ApolloDriver } from '@nestjs/apollo';
 import { BullModule, BullRootModuleOptions } from '@nestjs/bull';
 import {
-  BadRequestException,
   INestApplication,
   Logger,
   Module,
@@ -17,34 +16,20 @@ import {
 } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { useContainer } from 'class-validator';
-import { GraphQLError } from 'graphql';
-import { SevenBoom, formatErrorGenerator } from 'graphql-apollo-errors';
 import { CqrxModule } from 'nestjs-cqrx';
 import { NestoLogger } from 'nestolog';
 import { AppEnvironment } from './app.environment';
 import { RecipeModule } from './recipe/recipe.module'; // import 1
-import * as Modules from './modules'; // import 2
-import { ConduitModule } from './conduit/conduit.module';
+import * as Modules from './modules'; // import 2 (must be imported last)
 
 const GraphQLRootModule = GraphQLModule.forRootAsync({
   driver: ApolloDriver,
   imports: [Modules.Nestolog],
   inject: [Logger],
   useFactory: (logger: Logger) => {
-    const formatError = formatErrorGenerator({
-      hideSensitiveData: false,
-      logger: logger as any,
-      nonBoomTransformer: error => {
-        return error instanceof BadRequestException ||
-          error instanceof GraphQLError
-          ? SevenBoom.badRequest(error as any)
-          : SevenBoom.badImplementation(error, { details: error.message });
-      },
-    });
-
     return {
       autoSchemaFile: '~schema.gql',
-      formatError,
+      formatError: createGraphqlFormatError({ logger }),
       installSubscriptionHandlers: true,
       sortSchema: true,
     };

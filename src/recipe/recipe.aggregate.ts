@@ -8,6 +8,14 @@ import {
   RecipeRemoved,
 } from './recipe.events';
 
+type AddRecipeArgs = {
+  objectData: ObjectType<NewRecipeInput>;
+  findExisting: (
+    exceptId: string,
+    code?: string,
+  ) => Promise<string | undefined> | undefined;
+};
+
 export class RecipeAggregate
   extends AggregateRoot
   implements HandleRecipeEvents
@@ -31,13 +39,8 @@ export class RecipeAggregate
     this.code = code;
   }
 
-  async addRecipe(
-    objectData: ObjectType<NewRecipeInput>,
-    findExisting: (
-      exceptId: string,
-      code?: string,
-    ) => Promise<string | undefined>,
-  ) {
+  async addRecipe(args: AddRecipeArgs) {
+    const { findExisting, objectData } = args;
     const data = await transformAndValidate(NewRecipeInput, objectData);
     const existsId = await findExisting(this.id, data.code);
     if (existsId) {
