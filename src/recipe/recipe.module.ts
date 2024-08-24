@@ -17,7 +17,7 @@ import * as Modules from '../modules'; // must be imported last
     BullModule.registerQueue({
       name: 'recipe',
       settings: {
-        drainDelay: 0,
+        retryProcessDelay: 1000, // Resolve  [Error] Connection is closed in e2e
       },
     }),
     BullBoardModule.forFeature({

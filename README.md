@@ -21,3 +21,4 @@
 ## Issues
 
 - Unique keys with multiple null values not possible https://github.com/prisma/prisma/discussions/11558
+- E2e tests Connection is closed https://github.com/nestjs/bull/issues/2138

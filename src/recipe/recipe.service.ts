@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { ensure } from 'errorish';
 import { PubSub } from 'graphql-subscriptions';
-import { fromPromise } from 'neverthrow';
+import { fromPromise, fromAsyncThrowable } from 'neverthrow';
 import { ObjectType } from 'simplytyped';
 import { NewRecipeInput } from './dto/new-recipe.input';
 import { RecipesArgs } from './dto/recipes.args';
@@ -103,8 +103,8 @@ export class RecipeService {
 
   private async updateProjection(id: string) {
     const projection = await this.viewRepository.findUnique({
-      where: { id },
       select: { id: true },
+      where: { id },
     });
 
     if (!projection) {

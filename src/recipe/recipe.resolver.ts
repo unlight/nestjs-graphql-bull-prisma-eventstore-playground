@@ -3,7 +3,7 @@ import { NewRecipeInput } from './dto/new-recipe.input';
 import { RecipesArgs } from './dto/recipes.args';
 import { Recipe } from './models/recipe.model';
 import { RecipeService } from './recipe.service';
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundException, OnModuleDestroy } from '@nestjs/common';
 import {
   Args,
   Info,
@@ -20,7 +20,7 @@ import { PrismaSelect } from '@paljs/plugins';
 import { RemoveRecipeInput } from './dto/remove-recipe.input';
 
 @Resolver(() => Recipe)
-export class RecipeResolver {
+export class RecipeResolver implements OnModuleDestroy {
   constructor(
     @InjectQueue('recipe') private queue: Queue,
     private readonly recipeService: RecipeService,
@@ -65,5 +65,9 @@ export class RecipeResolver {
   @Subscription(() => Recipe)
   recipeAdded() {
     return this.pubSub.asyncIterator('recipeAdded');
+  }
+
+  async onModuleDestroy() {
+    await this.queue.close();
   }
 }

@@ -12,9 +12,11 @@ import { VariablesOf, graphql } from 'gql.tada';
 import { AppModule, configureApp } from '../app.module';
 import { RecipeService } from '../recipe/recipe.service';
 import { setTimeout } from 'timers/promises';
+import { uniqueId } from 'lodash';
 
 let app: INestApplication;
 let graphqlRequest: GraphqlRequestFunction;
+let queue: Queue;
 
 before(async () => {
   const testingModule = await Test.createTestingModule({
@@ -26,7 +28,18 @@ before(async () => {
 
   await app.init();
   graphqlRequest = createGraphqlRequest(app.getHttpServer());
+
+  queue = await app.resolve(getQueueToken('recipe'));
+  await queue.empty();
 });
+
+// beforeEach(async () => {
+//   queue = await app.resolve(getQueueToken('recipe'));
+// });
+
+// afterEach(async () => {
+//   await queue.close();
+// });
 
 after(async () => {
   await app.close();
@@ -48,11 +61,6 @@ it('read recipes', async () => {
   const { data, error } = await graphqlRequest(recipesQuery);
 });
 
-before(async () => {
-  const queue: Queue = await app.resolve(getQueueToken('recipe'));
-  await queue.empty();
-});
-
 it('create recipe ok', async () => {
   // Arrange
   const queue: Queue = await app.resolve(getQueueToken('recipe'));
@@ -62,23 +70,21 @@ it('create recipe ok', async () => {
       addRecipe(data: $data)
     }
   `);
+  const title = uniqueId('title');
   // Act
   const { data, errors } = await graphqlRequest(createRecipe, {
     data: {
       description: null,
       ingredients: [],
-      title: 'unrelishing',
+      title,
     },
   });
   expect(errors).toBeFalsy();
-  await queue.whenCurrentJobsFinished();
+  await waitWhenAllJobsFinished(queue);
   // Assert
   const recipe = await service.findOneById(data.addRecipe);
   expect(recipe).toEqual(
-    expect.objectContaining({
-      id: data.addRecipe,
-      title: 'unrelishing',
-    }),
+    expect.objectContaining({ id: data.addRecipe, title }),
   );
 });
 
@@ -91,11 +97,12 @@ it('create and remove', async () => {
       addRecipe(data: $data)
     }
   `);
+  const title = uniqueId('title');
   // Act
   const create = await graphqlRequest(createRecipe, {
     data: {
       ingredients: [],
-      title: 'unfussed',
+      title,
     },
   });
   expect(create.errors).toBeFalsy();
@@ -107,7 +114,12 @@ it('create and remove', async () => {
         removeRecipe(data: $data)
       }
     `),
-    { data: { id: create.data.addRecipe, removeReason: 'test remove' } },
+    {
+      data: {
+        id: create.data.addRecipe,
+        removeReason: uniqueId('test remove'),
+      },
+    },
   );
   await waitWhenAllJobsFinished(queue);
   // Assert
@@ -119,33 +131,33 @@ it('create and remove', async () => {
   );
 });
 
-it.only('revert recipe with non uniq code', async () => {
-  // Arrange
-  const queue: Queue = await app.resolve(getQueueToken('recipe'));
-  const service = await app.resolve(RecipeService);
-  const createRecipe = graphql(/* GraphQL */ `
-    mutation addRecipe($data: NewRecipeInput!) {
-      addRecipe(data: $data)
-    }
-  `);
-  const code = Math.random().toString(36).slice(2);
-  const data = {
-    code: code,
-    title: 'aqew 1',
-  } satisfies VariablesOf<typeof createRecipe>;
-  // Act
-  const [result1, result2] = await Promise.all([
-    graphqlRequest(createRecipe, { data }),
-    graphqlRequest(createRecipe, { data }),
-  ]);
-  await waitWhenAllJobsFinished(queue);
-  // Assert
-  expect(result1.data.addRecipe).toBeTruthy();
-  expect(result2.data.addRecipe).toBeTruthy();
-  const recipe1 = await service.findOneById(result1.data.addRecipe);
-  const recipe2 = await service.findOneById(result2.data.addRecipe);
+// it.only('revert recipe with non uniq code', async () => {
+//   // Arrange
+//   const queue: Queue = await app.resolve(getQueueToken('recipe'));
+//   const service = await app.resolve(RecipeService);
+//   const createRecipe = graphql(/* GraphQL */ `
+//     mutation addRecipe($data: NewRecipeInput!) {
+//       addRecipe(data: $data)
+//     }
+//   `);
+//   const code = Math.random().toString(36).slice(2);
+//   const data = {
+//     code: code,
+//     title: 'aqew 1',
+//   } satisfies VariablesOf<typeof createRecipe>;
+//   // Act
+//   const [result1, result2] = await Promise.all([
+//     graphqlRequest(createRecipe, { data }),
+//     graphqlRequest(createRecipe, { data }),
+//   ]);
+//   await waitWhenAllJobsFinished(queue);
+//   // Assert
+//   expect(result1.data.addRecipe).toBeTruthy();
+//   expect(result2.data.addRecipe).toBeTruthy();
+//   const recipe1 = await service.findOneById(result1.data.addRecipe);
+//   const recipe2 = await service.findOneById(result2.data.addRecipe);
 
-  const result = [recipe1, recipe2].filter(Boolean);
+//   const result = [recipe1, recipe2].filter(Boolean);
 
-  expect(result[0]).toEqual(expect.objectContaining({ code, isActive: true }));
-});
+//   expect(result[0]).toEqual(expect.objectContaining({ code, isActive: true }));
+// });

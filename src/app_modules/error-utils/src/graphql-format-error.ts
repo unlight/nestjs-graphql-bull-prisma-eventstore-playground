@@ -1,4 +1,4 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { GraphQLError } from 'graphql';
 import { SevenBoom, formatErrorGenerator } from 'graphql-apollo-errors';
 
@@ -14,10 +14,14 @@ export function createGraphqlFormatError(args: CreateFormatErrorArgs) {
       },
     },
     nonBoomTransformer: error => {
-      return error instanceof BadRequestException ||
-        error instanceof GraphQLError
-        ? SevenBoom.badRequest(error as any)
-        : SevenBoom.badImplementation(error, { details: error.message });
+      if (error instanceof GraphQLError)
+        return SevenBoom.badRequest(error as any);
+      if (error instanceof BadRequestException)
+        return SevenBoom.badRequest(error as any);
+      if (error instanceof NotFoundException)
+        return SevenBoom.notFound(error as any);
+
+      return SevenBoom.badImplementation(error, { details: error.message });
     },
   });
 }

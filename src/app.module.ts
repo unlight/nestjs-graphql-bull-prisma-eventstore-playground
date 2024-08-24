@@ -56,6 +56,11 @@ const GraphQLRootModule = GraphQLModule.forRootAsync({
       inject: [AppEnvironment],
       useFactory(environment: AppEnvironment): BullRootModuleOptions {
         return {
+          defaultJobOptions: {},
+          redis: {
+            connectTimeout: 10000,
+            keepAlive: 10000,
+          },
           url: environment.redisConnectionString,
         };
       },

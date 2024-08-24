@@ -1,13 +1,17 @@
 import {
+  InjectQueue,
   OnQueueActive,
   OnQueueCompleted,
   OnQueueDrained,
+  OnQueueError,
   OnQueueFailed,
+  OnQueueStalled,
+  OnQueueWaiting,
   Process,
   Processor,
 } from '@nestjs/bull';
 import { Logger } from '@nestjs/common';
-import { Job } from 'bull';
+import { Job, Queue } from 'bull';
 import { ObjectType } from 'simplytyped';
 import { NewRecipeInput } from './dto/new-recipe.input';
 import { RecipeService } from './recipe.service';
@@ -51,5 +55,21 @@ export class RecipeProcessor {
   @OnQueueDrained()
   async onQueueDrained() {
     this.logger.verbose(`queue drained`);
+  }
+
+  @OnQueueWaiting()
+  async onQueueWaiting(jobId: string) {
+    this.logger.verbose(`queue ${jobId} waiting`);
+  }
+
+  @OnQueueStalled()
+  async onQueueStalled(jobId) {
+    this.logger.verbose(`queue ${jobId} stalled`);
+  }
+
+  @OnQueueError()
+  async onQueueError(error, message) {
+    if (message) this.logger.error(message);
+    this.logger.error(error);
   }
 }
