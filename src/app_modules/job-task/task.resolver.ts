@@ -1,8 +1,7 @@
 import { NotFoundException, OnModuleInit } from '@nestjs/common';
 import { DiscoveryService } from '@nestjs/core';
 import { Args, Query, Resolver } from '@nestjs/graphql';
-import { Queue, Job } from 'bull';
-import BullQueue from 'bull/lib/queue';
+import { Queue, Job } from 'bullmq';
 import { Task, TaskState } from './task.model';
 import { JobState } from './types';
 
@@ -54,7 +53,7 @@ export class TaskResolver implements OnModuleInit {
   async onModuleInit() {
     this.queues = this.discoveryService
       .getProviders()
-      .filter(provider => provider.instance instanceof BullQueue)
+      .filter(provider => provider.instance instanceof Queue)
       .map(provider => provider.instance);
   }
 }

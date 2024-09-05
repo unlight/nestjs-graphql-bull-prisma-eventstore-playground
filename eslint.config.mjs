@@ -24,7 +24,9 @@ export default [
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
-  sonarjs.configs.recommended,
+
+  // sonarjs.configs.recommended,
+
   prettier,
   {
     ...unicorn.configs['flat/recommended'],

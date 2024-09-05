@@ -3,10 +3,10 @@ import {
   createGraphqlRequest,
   waitWhenAllJobsFinished,
 } from '@/test-utils';
-import { getQueueToken } from '@nestjs/bull';
+import { getQueueToken } from '@nestjs/bullmq';
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { Queue } from 'bull';
+import { Queue } from 'bullmq';
 import { expect } from 'expect';
 import { VariablesOf, graphql } from 'gql.tada';
 import { AppModule, configureApp } from '../app.module';
@@ -30,16 +30,8 @@ before(async () => {
   graphqlRequest = createGraphqlRequest(app.getHttpServer());
 
   queue = await app.resolve(getQueueToken('recipe'));
-  await queue.empty();
+  await queue.obliterate();
 });
-
-// beforeEach(async () => {
-//   queue = await app.resolve(getQueueToken('recipe'));
-// });
-
-// afterEach(async () => {
-//   await queue.close();
-// });
 
 after(async () => {
   await app.close();

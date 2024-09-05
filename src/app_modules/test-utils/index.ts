@@ -1,4 +1,4 @@
-import { Queue } from 'bull';
+import { Queue } from 'bullmq';
 import { ResultOf, TadaDocumentNode, VariablesOf } from 'gql.tada';
 import { print } from 'graphql';
 import { ErrorPayload } from 'graphql-apollo-errors';
@@ -31,9 +31,9 @@ export function createGraphqlRequest(server) {
 export async function waitWhenAllJobsFinished(queue: Queue) {
   while (true) {
     await setTimeout(100);
-    await queue.whenCurrentJobsFinished();
     if (await queue.getActiveCount()) continue;
     if (await queue.getWaitingCount()) continue;
+    if (await queue.getWaitingChildrenCount()) continue;
 
     break;
   }

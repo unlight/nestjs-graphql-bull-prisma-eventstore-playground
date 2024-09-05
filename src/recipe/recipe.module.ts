@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { BullModule } from '@nestjs/bull';
+import { BullModule } from '@nestjs/bullmq';
 import { PubSub } from 'graphql-subscriptions';
 import { CqrxModule } from 'nestjs-cqrx';
 import { BullAdapter } from '@bull-board/api/bullAdapter';
@@ -16,9 +16,6 @@ import * as Modules from '../modules'; // must be imported last
     CqrxModule.forFeature([RecipeAggregate]),
     BullModule.registerQueue({
       name: 'recipe',
-      settings: {
-        retryProcessDelay: 1000, // Resolve  [Error] Connection is closed in e2e
-      },
     }),
     BullBoardModule.forFeature({
       adapter: BullAdapter,

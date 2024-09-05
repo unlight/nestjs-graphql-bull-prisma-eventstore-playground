@@ -1,8 +1,6 @@
-version: '3.8'
-
 services:
   eventstoredb:
-    image: eventstore/eventstore:23.10.0-bookworm-slim
+    image: ghcr.io/eventstore/eventstore:22.10.6-alpha.0.12-alpine
     environment:
       - EVENTSTORE_CLUSTER_SIZE=1
       - EVENTSTORE_RUN_PROJECTIONS=System # All, None, System
@@ -45,13 +43,13 @@ services:
   #     - 'mongo1_config:/data/configdb'
 
   redis:
-    image: redis:4-alpine
+    image: redis:6-alpine
     restart: always
     ports:
       - '6379:6379'
 
   postgres:
-    image: postgres:14.1-alpine
+    image: postgres:15-alpine
     restart: always
     environment:
       - POSTGRES_USER=postgres

@@ -1,4 +1,4 @@
-import { InjectQueue } from '@nestjs/bull';
+import { InjectQueue } from '@nestjs/bullmq';
 import { NewRecipeInput } from './dto/new-recipe.input';
 import { RecipesArgs } from './dto/recipes.args';
 import { Recipe } from './models/recipe.model';
@@ -12,7 +12,7 @@ import {
   Resolver,
   Subscription,
 } from '@nestjs/graphql';
-import { Queue } from 'bull';
+import { Queue } from 'bullmq';
 import { createId } from '@paralleldrive/cuid2';
 import { PubSub } from 'graphql-subscriptions';
 import { GraphQLResolveInfo } from 'graphql';

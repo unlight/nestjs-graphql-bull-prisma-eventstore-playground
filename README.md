@@ -16,7 +16,8 @@
 ## TODO
 
 - something with recipe service
-- drainDelay doesnt work
+- drainDelay doesnt work it's anothre issue https://github.com/nestjs/bull/issues/2138
+- move bullmq, redis5
 
 ## Issues
 

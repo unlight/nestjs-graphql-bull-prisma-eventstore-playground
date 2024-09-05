@@ -7,7 +7,7 @@ import { TaskModule } from '@/job-task';
 import { ExpressAdapter } from '@bull-board/express';
 import { BullBoardModule } from '@bull-board/nestjs';
 import { ApolloDriver } from '@nestjs/apollo';
-import { BullModule, BullRootModuleOptions } from '@nestjs/bull';
+import { BullModule, BullRootModuleOptions } from '@nestjs/bullmq';
 import {
   INestApplication,
   Logger,
@@ -56,12 +56,11 @@ const GraphQLRootModule = GraphQLModule.forRootAsync({
       inject: [AppEnvironment],
       useFactory(environment: AppEnvironment): BullRootModuleOptions {
         return {
-          defaultJobOptions: {},
-          redis: {
-            connectTimeout: 10000,
-            keepAlive: 10000,
+          connection: {
+            host: 'localhost',
+            port: 6379,
           },
-          url: environment.redisConnectionString,
+          defaultJobOptions: {},
         };
       },
     }),
