@@ -3,7 +3,7 @@
 ## Stack
 
 - Nest.js Graphql
-- Bull
+- BullMQ
 - EventStoreDB
 - Prisma
 
