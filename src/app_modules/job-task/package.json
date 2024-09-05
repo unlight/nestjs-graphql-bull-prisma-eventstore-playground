@@ -1,4 +1,10 @@
 {
   "name": "job-task",
-  "version": "0.0.0-dev"
+  "version": "0.0.0-dev",
+  "peerDependencies": {
+    "@nestjs/core": "11 - 12",
+    "@nestjs/common": "11 - 12",
+    "@nestjs/graphql": "11 - 12",
+    "bullmq": "5"
+  }
 }
