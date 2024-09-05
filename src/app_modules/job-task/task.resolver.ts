@@ -17,9 +17,9 @@ export class TaskResolver implements OnModuleInit {
     const state = this.getTaskState(jobState);
 
     return {
+      failedReason: job.failedReason,
       id: String(job.id),
       state,
-      failedReason: job.failedReason,
     };
   }
 
@@ -50,10 +50,10 @@ export class TaskResolver implements OnModuleInit {
     }
   }
 
-  async onModuleInit() {
+  onModuleInit() {
     this.queues = this.discoveryService
       .getProviders()
       .filter(provider => provider.instance instanceof Queue)
-      .map(provider => provider.instance);
+      .map(provider => provider.instance as Queue);
   }
 }

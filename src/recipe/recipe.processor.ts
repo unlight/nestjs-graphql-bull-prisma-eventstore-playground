@@ -6,6 +6,10 @@ import { NewRecipeInput } from './dto/new-recipe.input';
 import { RemoveRecipeInput } from './dto/remove-recipe.input';
 import { RecipeService } from './recipe.service';
 
+type AddRecipeJob = Job<ObjectType<NewRecipeInput>, void, 'addRecipe'>;
+type RemoveRecipeJob = Job<ObjectType<RemoveRecipeInput>, void, 'removeRecipe'>;
+type Jobs = AddRecipeJob | RemoveRecipeJob;
+
 @Processor('recipe')
 export class RecipeProcessor extends WorkerHost {
   private readonly logger = new Logger(this.constructor.name);
@@ -14,9 +18,7 @@ export class RecipeProcessor extends WorkerHost {
     super();
   }
 
-  async process(
-    job: Job<any, any, 'addRecipe' | 'removeRecipe'>,
-  ): Promise<any> {
+  async process(job: Jobs): Promise<unknown> {
     switch (job.name) {
       case 'addRecipe':
         return this.addRecipe(job);
@@ -35,53 +37,53 @@ export class RecipeProcessor extends WorkerHost {
   }
 
   @OnWorkerEvent('active')
-  async onWorkerActive(job: Job) {
+  onWorkerActive(job: Job) {
     this.logger.verbose(`${job.name} (${job.id}) has started`);
   }
 
   @OnWorkerEvent('completed')
-  async onWorkerCompleted(job: Job, result: unknown, previous: string) {
+  onWorkerCompleted(job: Job, result: unknown, previous: string) {
     this.logger.verbose(`${job.name} completed ${job.id}`);
   }
 
   @OnWorkerEvent('drained')
-  async onWorkerDrained() {
+  onWorkerDrained() {
     this.logger.verbose('drained');
   }
 
   @OnWorkerEvent('error')
-  async onWorkerError(error: Error) {
+  onWorkerError(error: Error) {
     this.logger.error(error);
   }
 
   @OnWorkerEvent('failed')
-  async onWorkerFailed(job: Job, error: Error, previous: string) {
+  onWorkerFailed(job: Job, error: Error, previous: string) {
     this.logger.error(error);
     this.logger.warn(`${job.name} failed ${job.id}`);
   }
 
   @OnWorkerEvent('paused')
-  async onWorkerPaused() {
+  onWorkerPaused() {
     this.logger.verbose('paused');
   }
 
   @OnWorkerEvent('progress')
-  async onWorkerProgress(job: Job, progress: number | object) {
+  onWorkerProgress(job: Job, progress: number | object) {
     this.logger.verbose('progress');
   }
 
   @OnWorkerEvent('ready')
-  async onWorkerReady() {
+  onWorkerReady() {
     this.logger.verbose(`${this.worker.name} is ready`);
   }
 
   @OnWorkerEvent('resumed')
-  async onWorkerResumed() {
+  onWorkerResumed() {
     this.logger.verbose(`${this.worker.name} is resumed`);
   }
 
   @OnWorkerEvent('stalled')
-  async onWorkerStalled(jobId: string, previous: string) {
+  onWorkerStalled(jobId: string, previous: string) {
     this.logger.verbose(`job ${jobId} stalled`);
   }
 }
