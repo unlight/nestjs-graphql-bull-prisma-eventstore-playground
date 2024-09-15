@@ -9,7 +9,7 @@ import { RecipesArgs } from './dto/recipes.args';
 import { RemoveRecipeInput } from './dto/remove-recipe.input';
 import { Recipe as RecipeObject } from './models/recipe.model';
 import { RecipeAggregate } from './recipe.aggregate';
-import { Recipe } from './recipe.providers';
+import * as Recipe from './recipe.providers';
 
 @Injectable()
 export class RecipeService {
