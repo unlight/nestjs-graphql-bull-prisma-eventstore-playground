@@ -16,6 +16,15 @@
 ## TODO
 
 - something with recipe service
+- names of services
+  - recipe service
+  - recipe view repository
+  - recipe aggregate repository
+  - recipe projection service
+  - recipe model service
+  - recipe read service
+  - recipe write service
+  - recipe find service
 
 ## Issues
 
