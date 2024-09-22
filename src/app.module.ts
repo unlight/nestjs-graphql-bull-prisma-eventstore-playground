@@ -19,6 +19,7 @@ import { useContainer } from 'class-validator';
 import { CqrxModule } from 'nestjs-cqrx';
 import { NestoLogger } from 'nestolog';
 import { AppEnvironment } from './app.environment';
+import { ValidationModule } from './validation/validation.module';
 import { RecipeModule } from './recipe/recipe.module'; // import 1
 import * as Modules from './modules'; // import 2 (must be imported last)
 
@@ -69,6 +70,7 @@ const GraphQLRootModule = GraphQLModule.forRootAsync({
       route: '/queues',
     }),
     RecipeModule,
+    ValidationModule,
     TaskModule,
   ],
 })
