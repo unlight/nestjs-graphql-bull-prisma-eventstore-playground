@@ -2,9 +2,10 @@ import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { ObjectType } from 'simplytyped';
+import { AddRecipeUseCase } from './add-recipe.usecase';
 import { NewRecipeInput } from './dto/new-recipe.input';
 import { RemoveRecipeInput } from './dto/remove-recipe.input';
-import { RecipeService } from './recipe.service';
+import { RemoveRecipeUseCase } from './remove-recipe.usecase';
 
 type AddRecipeJob = Job<ObjectType<NewRecipeInput>, void, 'addRecipe'>;
 type RemoveRecipeJob = Job<ObjectType<RemoveRecipeInput>, void, 'removeRecipe'>;
@@ -14,7 +15,10 @@ type Jobs = AddRecipeJob | RemoveRecipeJob;
 export class RecipeProcessor extends WorkerHost {
   private readonly logger = new Logger(this.constructor.name);
 
-  constructor(private readonly recipeService: RecipeService) {
+  constructor(
+    private readonly addUseCase: AddRecipeUseCase,
+    private readonly removeUseCase: RemoveRecipeUseCase,
+  ) {
     super();
   }
 
@@ -27,13 +31,13 @@ export class RecipeProcessor extends WorkerHost {
     }
   }
 
-  async addRecipe(job: Job<ObjectType<NewRecipeInput>>) {
+  private async addRecipe(job: Job<ObjectType<NewRecipeInput>>) {
     const recipeId = job.id!;
-    await this.recipeService.addRecipe(recipeId, job.data);
+    await this.addUseCase.execute(recipeId, job.data);
   }
 
-  async removeRecipe(job: Job<ObjectType<RemoveRecipeInput>>) {
-    await this.recipeService.removeRecipe(job.data);
+  private async removeRecipe(job: Job<ObjectType<RemoveRecipeInput>>) {
+    await this.removeUseCase.execute(job.data);
   }
 
   @OnWorkerEvent('active')

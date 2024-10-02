@@ -15,6 +15,7 @@
 
 ## TODO
 
+- viewRepository under read/write service
 - something with recipe service
 - names of services
   - recipe service

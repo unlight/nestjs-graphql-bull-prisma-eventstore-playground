@@ -9,6 +9,9 @@ import { RecipeResolver } from './recipe.resolver';
 import { RecipeService } from './recipe.service';
 import { RecipeProcessor } from './recipe.processor';
 import * as Modules from '../modules'; // must be imported last
+import { AddRecipeUseCase } from './add-recipe.usecase';
+import { RemoveRecipeUseCase } from './remove-recipe.usecase';
+import { RecipeProjection } from './recipe.projection';
 
 @Module({
   imports: [
@@ -22,6 +25,14 @@ import * as Modules from '../modules'; // must be imported last
       name: 'recipe',
     }),
   ],
-  providers: [RecipeResolver, RecipeService, RecipeProcessor, PubSub],
+  providers: [
+    RecipeResolver,
+    RecipeService,
+    RecipeProcessor,
+    PubSub,
+    RecipeProjection,
+    AddRecipeUseCase,
+    RemoveRecipeUseCase,
+  ],
 })
 export class RecipeModule {}

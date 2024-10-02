@@ -49,7 +49,6 @@ export class RecipeResolver implements OnModuleDestroy {
 
   @Mutation(() => String)
   async addRecipe(@Args('data') data: NewRecipeInput): Promise<string> {
-    // throw 'test error';
     const job = await this.queue.add('addRecipe', data, {
       jobId: createId(),
     });
