@@ -11,14 +11,14 @@ import {
 export class RemoveRecipeUseCase {
   constructor(
     @InjectAggregateRepository()
-    private readonly aggregateRepository: AggregateRepository,
+    private readonly store: AggregateRepository,
     private readonly projection: RecipeProjection,
   ) {}
 
   async execute(data: ObjectType<RemoveRecipeInput>): Promise<void> {
-    const recipe = await this.aggregateRepository.load(data.id);
+    const recipe = await this.store.load(data.id);
     recipe.removeRecipe({ reason: data.removeReason });
-    await this.aggregateRepository.save(recipe);
+    await this.store.save(recipe);
     await this.projection.update(data.id);
   }
 }

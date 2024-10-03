@@ -10,9 +10,9 @@ import { Queue } from 'bullmq';
 import { expect } from 'expect';
 import { VariablesOf, graphql } from 'gql.tada';
 import { AppModule, configureApp } from '../app.module';
-import { RecipeService } from '../recipe/recipe.service';
 import { setTimeout } from 'timers/promises';
 import { uniqueId } from 'lodash';
+import { RecipeService } from '../recipe/recipe.service';
 
 let app: INestApplication;
 let graphqlRequest: GraphqlRequestFunction;

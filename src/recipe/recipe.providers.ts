@@ -6,10 +6,9 @@ import * as cqrx from 'nestjs-cqrx';
 const name = 'recipe';
 type name = typeof name;
 
-export type ViewRepository = PrismaRepository[name];
 export type ProjectionRepository = PrismaRepository[name];
 
-export function InjectViewRepository() {
+export function InjectProjectionRepository() {
   return InjectRepository(name);
 }
 

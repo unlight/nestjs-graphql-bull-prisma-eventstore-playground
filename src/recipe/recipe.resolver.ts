@@ -1,8 +1,7 @@
 import { InjectQueue } from '@nestjs/bullmq';
 import { NewRecipeInput } from './dto/new-recipe.input';
 import { RecipesArgs } from './dto/recipes.args';
-import { Recipe } from './models/recipe.model';
-import { RecipeService } from './recipe.service';
+import { Recipe } from './recipe.model';
 import { NotFoundException, OnModuleDestroy } from '@nestjs/common';
 import {
   Args,
@@ -18,12 +17,13 @@ import { PubSub } from 'graphql-subscriptions';
 import { GraphQLResolveInfo } from 'graphql';
 import { PrismaSelect } from '@paljs/plugins';
 import { RemoveRecipeInput } from './dto/remove-recipe.input';
+import { RecipeService } from './recipe.service';
 
 @Resolver(() => Recipe)
 export class RecipeResolver implements OnModuleDestroy {
   constructor(
     @InjectQueue('recipe') private queue: Queue,
-    private readonly recipeService: RecipeService,
+    private readonly service: RecipeService,
     private readonly pubSub: PubSub,
   ) {}
 
@@ -35,7 +35,7 @@ export class RecipeResolver implements OnModuleDestroy {
     const select = new PrismaSelect(info).value.select;
     // console.log('select', select);
 
-    const recipe = await this.recipeService.findOneById(id);
+    const recipe = await this.service.findOneById(id);
     if (!recipe) {
       throw new NotFoundException(id);
     }
@@ -44,7 +44,7 @@ export class RecipeResolver implements OnModuleDestroy {
 
   @Query(() => [Recipe])
   recipes(@Args() recipesArgs: RecipesArgs): Promise<Recipe[]> {
-    return this.recipeService.findAll(recipesArgs);
+    return this.service.findAll(recipesArgs);
   }
 
   @Mutation(() => String)

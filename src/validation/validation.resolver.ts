@@ -1,6 +1,6 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Query, Resolver } from '@nestjs/graphql';
-import { Recipe } from '../recipe/models/recipe.model';
+import { Recipe } from '../recipe/recipe.model';
 import { NewRecipeInput } from '../recipe/dto/new-recipe.input';
 import { transformAndValidate } from 'class-transformer-validator';
 
