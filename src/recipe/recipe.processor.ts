@@ -62,8 +62,8 @@ export class RecipeProcessor extends WorkerHost {
 
   @OnWorkerEvent('failed')
   onWorkerFailed(job: Job, error: Error, previous: string) {
-    this.logger.error(error);
     this.logger.warn(`${job.name} failed ${job.id}`);
+    this.logger.error(error);
   }
 
   @OnWorkerEvent('paused')

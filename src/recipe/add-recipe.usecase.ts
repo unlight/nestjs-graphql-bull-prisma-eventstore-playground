@@ -9,7 +9,6 @@ import {
   InjectAggregateRepository,
   AggregateRepository,
 } from './recipe.providers';
-import { RecipeAggregate } from './recipe.aggregate';
 
 @Injectable()
 export class AddRecipeUseCase {
@@ -27,8 +26,6 @@ export class AddRecipeUseCase {
     const recipe = this.aggregateRepository.create(recipeId);
     await recipe.addRecipe({ findExisting: () => void 0, objectData });
     await recipe.commit();
-
-    const errors: Error = [];
 
     await fromPromise(
       (async () => {
