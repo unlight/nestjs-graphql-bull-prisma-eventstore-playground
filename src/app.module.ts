@@ -27,10 +27,10 @@ const GraphQLRootModule = GraphQLModule.forRootAsync({
   driver: ApolloDriver,
   imports: [Modules.Nestolog],
   inject: [Logger],
-  useFactory: (logger: Logger) => {
+  useFactory: () => {
     return {
       autoSchemaFile: '~schema.gql',
-      formatError: createGraphqlFormatError({ logger }),
+      formatError: createGraphqlFormatError(),
       installSubscriptionHandlers: true,
       sortSchema: true,
     };

@@ -34,7 +34,6 @@ export class RecipeResolver implements OnModuleDestroy {
   ): Promise<Recipe> {
     const select = new PrismaSelect(info).value.select;
     // console.log('select', select);
-
     const recipe = await this.service.findOneById(id);
     if (!recipe) {
       throw new NotFoundException(id);

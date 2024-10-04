@@ -1,14 +1,13 @@
 import { Queue } from 'bullmq';
 import { ResultOf, TadaDocumentNode, VariablesOf } from 'gql.tada';
 import { print } from 'graphql';
-import { ErrorPayload } from 'graphql-apollo-errors';
 import request from 'supertest';
 import { setTimeout } from 'node:timers/promises';
 
 type GraphQLRequestResult<Q> = {
   data: ResultOf<Q>;
-  errors?: ErrorPayload[];
-  error?: ErrorPayload;
+  errors?: any[];
+  error?: any;
 };
 
 export type GraphqlRequestFunction = ReturnType<typeof createGraphqlRequest>;

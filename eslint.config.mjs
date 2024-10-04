@@ -11,7 +11,12 @@ import perfectionist from 'eslint-plugin-perfectionist';
 /** @type {import('@typescript-eslint/utils').TSESLint.FlatConfig.ConfigFile} */
 export default [
   {
-    ignores: ['dist/', 'coverage/', 'eslint.tsconfig.mjs'],
+    ignores: [
+      'dist/',
+      'coverage/',
+      'eslint.tsconfig.mjs',
+      'webpack.config.cjs',
+    ],
     languageOptions: {
       globals: globals.node,
       parserOptions: {

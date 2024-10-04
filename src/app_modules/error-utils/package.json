@@ -13,7 +13,7 @@
   "dependencies": {
     "class-validator-flat-formatter": "^4.0.2",
     "errorish": "^1.0.0",
-    "graphql-apollo-errors": "^2.0.3"
+    "flat": "^6.0.1"
   },
   "peerDependencies": {
     "@nestjs/common": "^10.3.8",

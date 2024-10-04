@@ -7,6 +7,11 @@
 - EventStoreDB
 - Prisma
 
+## Commands
+
+- npm run dev:w
+- npm run dev:w -- --env inspect
+
 ## Links
 
 - http://localhost:2113/web/index.html#/streams
