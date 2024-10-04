@@ -47,6 +47,8 @@
     "gql.tada": "^1.8.9",
     "graphql": "^16.9.0",
     "graphql-subscriptions": "^2.0.0",
+    "modern-errors": "^7.0.1",
+    "modern-errors-clean": "^6.0.0",
     "nestjs-cqrx": "^3.0.2",
     "nestolog": "^3.0.0",
     "prisma-query-log": "^3.2.1",
