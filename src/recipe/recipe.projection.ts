@@ -24,10 +24,8 @@ export class RecipeProjection {
   ): Promise<Recipe.CreateResult> {
     const [id, recipe] = await this.store.streamIdAndAggregate(argument);
     const data: Prisma.RecipeCreateInput = {
-      ...recipe,
-      creationDate: recipe.addedAt,
+      ...this.getUpdateData(recipe),
       id,
-      isAggregating: false,
     };
 
     return await this.repository.create({ data });
@@ -45,12 +43,21 @@ export class RecipeProjection {
 
     const recipe = await this.store.load(id);
 
-    const data: Prisma.RecipeUpdateInput = {
-      ...recipe,
-      creationDate: recipe.addedAt,
-      isAggregating: false,
-    };
+    const data: Prisma.RecipeUpdateInput = this.getUpdateData(recipe);
 
     await this.repository.update({ data, where: { id } });
+  }
+
+  private getUpdateData(recipe: RecipeAggregate) {
+    return {
+      boo: 1,
+      code: recipe.code,
+      creationDate: recipe.addedAt,
+      description: recipe.description,
+      ingredients: recipe.ingredients,
+      isActive: recipe.isActive,
+      isAggregating: false,
+      title: recipe.title,
+    };
   }
 }

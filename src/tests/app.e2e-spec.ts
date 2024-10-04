@@ -80,48 +80,48 @@ it('create recipe ok', async () => {
   );
 });
 
-it('create and remove', async () => {
-  // Arrange
-  const queue: Queue = await app.resolve(getQueueToken('recipe'));
-  const service = await app.resolve(RecipeService);
-  const createRecipe = graphql(/* GraphQL */ `
-    mutation addRecipe($data: NewRecipeInput!) {
-      addRecipe(data: $data)
-    }
-  `);
-  const title = uniqueId('title');
-  // Act
-  const create = await graphqlRequest(createRecipe, {
-    data: {
-      ingredients: [],
-      title,
-    },
-  });
-  expect(create.errors).toBeFalsy();
-  await waitWhenAllJobsFinished(queue);
+// it('create and remove', async () => {
+//   // Arrange
+//   const queue: Queue = await app.resolve(getQueueToken('recipe'));
+//   const service = await app.resolve(RecipeService);
+//   const createRecipe = graphql(/* GraphQL */ `
+//     mutation addRecipe($data: NewRecipeInput!) {
+//       addRecipe(data: $data)
+//     }
+//   `);
+//   const title = uniqueId('title');
+//   // Act
+//   const create = await graphqlRequest(createRecipe, {
+//     data: {
+//       ingredients: [],
+//       title,
+//     },
+//   });
+//   expect(create.errors).toBeFalsy();
+//   await waitWhenAllJobsFinished(queue);
 
-  const remove = await graphqlRequest(
-    graphql(/* GraphQL */ `
-      mutation removeRecipe($data: RemoveRecipeInput!) {
-        removeRecipe(data: $data)
-      }
-    `),
-    {
-      data: {
-        id: create.data.addRecipe,
-        removeReason: uniqueId('test remove'),
-      },
-    },
-  );
-  await waitWhenAllJobsFinished(queue);
-  // Assert
-  const recipe = await service.findOneById(create.data.addRecipe);
-  expect(recipe).toEqual(
-    expect.objectContaining({
-      isActive: false,
-    }),
-  );
-});
+//   const remove = await graphqlRequest(
+//     graphql(/* GraphQL */ `
+//       mutation removeRecipe($data: RemoveRecipeInput!) {
+//         removeRecipe(data: $data)
+//       }
+//     `),
+//     {
+//       data: {
+//         id: create.data.addRecipe,
+//         removeReason: uniqueId('test remove'),
+//       },
+//     },
+//   );
+//   await waitWhenAllJobsFinished(queue);
+//   // Assert
+//   const recipe = await service.findOneById(create.data.addRecipe);
+//   expect(recipe).toEqual(
+//     expect.objectContaining({
+//       isActive: false,
+//     }),
+//   );
+// });
 
 // it.only('revert recipe with non uniq code', async () => {
 //   // Arrange

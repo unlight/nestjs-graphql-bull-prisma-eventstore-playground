@@ -9,6 +9,7 @@ import {
   InjectAggregateRepository,
   AggregateRepository,
 } from './recipe.providers';
+import { RecipeAggregate } from './recipe.aggregate';
 
 @Injectable()
 export class AddRecipeUseCase {
@@ -27,20 +28,26 @@ export class AddRecipeUseCase {
     await recipe.addRecipe({ findExisting: () => void 0, objectData });
     await recipe.commit();
 
+    const errors: Error = [];
+
     await fromPromise(
       (async () => {
         await this.projection.create(recipeId);
       })(),
       error => ensure(error),
-    ).match(
-      async recipeAdded => {
-        await this.pubSub.publish('recipeAdded', { recipeAdded });
-      },
-      async error => {
-        recipe.removeRecipe({ reason: error.message.trim() });
-        await recipe.commit();
-        await this.projection.update(recipe.id);
-      },
-    );
+    )
+      .match(
+        async recipeAdded => {
+          await this.pubSub.publish('recipeAdded', { recipeAdded });
+        },
+        async error => {
+          recipe.removeRecipe({ reason: error.message.trim() });
+          await recipe.commit();
+          await this.projection.update(recipe.id);
+        },
+      )
+      .catch(cause => {
+        throw new Error('Add failed', { cause });
+      });
   }
 }
