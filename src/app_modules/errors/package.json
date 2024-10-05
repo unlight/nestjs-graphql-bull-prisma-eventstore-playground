@@ -1,5 +1,5 @@
 {
-  "name": "error-utils",
+  "name": "errors",
   "version": "1.0.0",
   "main": "dist/index",
   "types": "dist/index",
@@ -11,7 +11,7 @@
     "build": "tsc -p tsconfig.build.json"
   },
   "dependencies": {
-    "class-validator-flat-formatter": "^4.0.2",
+    "class-validator-flat-formatter": "^5.0.0",
     "errorish": "^1.0.0",
     "flat": "^6.0.1"
   },

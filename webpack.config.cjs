@@ -2,6 +2,16 @@ const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 const NodemonPlugin = require('nodemon-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const lnk = require('lnk');
+const { existsSync } = require('fs');
+
+const applicationId = 'nestjs-graphql-bull-prisma-eventstore-playground';
+const outputPath = path.join(process.env.TEMP, applicationId); // Bound to memory FS
+const projectNodeModule = path.resolve(__dirname, 'node_modules');
+
+if (!existsSync(projectNodeModule)) {
+  lnk.sync(projectNodeModule, outputPath, { type: 'directory' });
+}
 
 module.exports = (env, options) => {
   const transpileModules = [
@@ -23,6 +33,7 @@ module.exports = (env, options) => {
     'modern-errors-clean',
     'clean-stack',
   ];
+
   /**
    * @type {import('webpack').Configuration}
    */
@@ -34,7 +45,7 @@ module.exports = (env, options) => {
         allowlist: transpileModules,
       }),
     ],
-    devtool: 'source-map',
+    devtool: false,
     module: {
       rules: [
         { parser: { amd: false } },
@@ -66,8 +77,8 @@ module.exports = (env, options) => {
     },
     plugins: [
       new NodemonPlugin({
-        script: './dist/server.js',
-        watch: path.resolve('./dist/server.js'),
+        script: path.resolve(outputPath, 'main.cjs'),
+        watch: path.resolve(outputPath, 'main.cjs'),
         ignore: ['*.js.map', '*.d.ts'],
         ext: 'js,json',
         delay: 500,
@@ -76,8 +87,8 @@ module.exports = (env, options) => {
       }),
     ],
     output: {
-      path: path.join(__dirname, 'dist'),
-      filename: 'server.js',
+      path: outputPath,
+      filename: 'main.cjs',
     },
   };
 

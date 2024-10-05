@@ -2,7 +2,11 @@ import { InjectQueue } from '@nestjs/bullmq';
 import { NewRecipeInput } from './dto/new-recipe.input';
 import { RecipesArgs } from './dto/recipes.args';
 import { Recipe } from './recipe.model';
-import { NotFoundException, OnModuleDestroy } from '@nestjs/common';
+import {
+  BadRequestException,
+  NotFoundException,
+  OnModuleDestroy,
+} from '@nestjs/common';
 import {
   Args,
   Info,
@@ -18,6 +22,8 @@ import { GraphQLResolveInfo } from 'graphql';
 import { PrismaSelect } from '@paljs/plugins';
 import { RemoveRecipeInput } from './dto/remove-recipe.input';
 import { RecipeService } from './recipe.service';
+import { transformAndValidate } from 'class-transformer-validator';
+import { UnknownError } from '@/errors';
 
 @Resolver(() => Recipe)
 export class RecipeResolver implements OnModuleDestroy {
@@ -58,6 +64,33 @@ export class RecipeResolver implements OnModuleDestroy {
   async removeRecipe(@Args('data') data: RemoveRecipeInput): Promise<string> {
     const job = await this.queue.add('removeRecipe', data);
     return String(job.id);
+  }
+
+  @Query(() => Recipe)
+  error404(): Promise<Recipe> {
+    throw new NotFoundException('dummy');
+  }
+
+  @Query(() => Recipe)
+  async error400(): Promise<Recipe> {
+    const errors = await transformAndValidate(NewRecipeInput, {}).catch(
+      errors => errors,
+    );
+    throw new BadRequestException(errors);
+  }
+
+  @Query(() => Recipe)
+  async error500(): Promise<Recipe> {
+    throw new Error('unexpected error');
+  }
+
+  @Query(() => Recipe)
+  async modernUnknown(): Promise<Recipe> {
+    throw new UnknownError('unknown message', {
+      props: {
+        userId: 1,
+      },
+    });
   }
 
   @Subscription(() => Recipe)

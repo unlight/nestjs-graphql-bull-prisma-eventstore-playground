@@ -9,8 +9,9 @@
 
 ## Commands
 
-- npm run dev:w
-- npm run dev:w -- --env inspect
+- npm run dev (ts-node)
+- npm run devw (webpack)
+- npm run devw -- --env inspect
 
 ## Links
 

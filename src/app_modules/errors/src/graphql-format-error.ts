@@ -30,7 +30,7 @@ export function createGraphqlFormatError() {
     for (const [key, value] of Object.entries(flatData)) {
       // console.log({ value, canBeStringified: canBeStringified(value) });
       if (!canBeStringified(value)) continue;
-      if (typeof value === 'number') {
+      if (['number', 'bigint'].includes(typeof value)) {
         extensions[key] = value;
         continue;
       }

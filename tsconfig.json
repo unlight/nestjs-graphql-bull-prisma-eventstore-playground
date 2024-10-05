@@ -30,7 +30,7 @@
     "baseUrl": ".",
     "paths": {
       "@/nestjs-prisma": ["./src/app_modules/prisma/src"],
-      "@/error-utils": ["./src/app_modules/error-utils/src"],
+      "@/errors": ["./src/app_modules/errors/src"],
       "@/test-utils": ["./src/app_modules/test-utils"],
       "@/job-task": ["./src/app_modules/job-task"]
     },
