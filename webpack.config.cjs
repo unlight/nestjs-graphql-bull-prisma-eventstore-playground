@@ -9,7 +9,7 @@ const applicationId = 'nestjs-graphql-bull-prisma-eventstore-playground';
 const outputPath = path.join(process.env.TEMP, applicationId); // Bound to memory FS
 const projectNodeModule = path.resolve(__dirname, 'node_modules');
 
-if (!existsSync(projectNodeModule)) {
+if (!existsSync(path.resolve(outputPath, 'node_modules'))) {
   lnk.sync(projectNodeModule, outputPath, { type: 'directory' });
 }
 

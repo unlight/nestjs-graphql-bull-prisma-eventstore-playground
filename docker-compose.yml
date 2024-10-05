@@ -50,6 +50,7 @@ services:
 
   postgres:
     image: postgres:15-alpine
+    command: postgres -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c random_page_cost=1.0
     restart: always
     environment:
       - POSTGRES_USER=postgres
@@ -59,7 +60,8 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - db:/var/lib/postgresql/data
+      - ${TEMP}/pg15data:/var/lib/postgresql/data
+      # - db:/var/lib/postgresql/data
 
 networks:
   esdb_network:
@@ -70,5 +72,5 @@ volumes:
   mongo1_config:
   eventstore-volume-data:
   eventstore-volume-logs:
-  db:
-    driver: local
+  # db:
+  #   driver: local
