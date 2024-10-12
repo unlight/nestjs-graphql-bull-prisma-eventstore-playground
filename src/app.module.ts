@@ -16,7 +16,7 @@ import {
 } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { useContainer } from 'class-validator';
-import { CqrxModule } from 'nestjs-cqrx';
+import { CqrxModule, EventStoreService } from 'nestjs-cqrx';
 import { NestoLogger } from 'nestolog';
 import { AppEnvironment } from './app.environment';
 import { RecipeModule } from './recipe/recipe.module'; // import 1
@@ -74,7 +74,11 @@ const GraphQLRootModule = GraphQLModule.forRootAsync({
 })
 export class AppModule {}
 
-export function configureApp(app: INestApplication) {
+type ConfigureApp = {
+  logEvents?: boolean;
+};
+
+export function configureApp(app: INestApplication, options?: ConfigureApp) {
   app.enableCors();
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.useGlobalPipes(
@@ -88,4 +92,13 @@ export function configureApp(app: INestApplication) {
   );
   app.useLogger(app.get(NestoLogger));
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
+
+  if (options?.logEvents) {
+    const logger = new Logger('Event');
+    const eventStoreService = app.get(EventStoreService);
+
+    const unsubscribe = eventStoreService.subscribeToAll(event => {
+      logger.verbose(event);
+    });
+  }
 }

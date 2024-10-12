@@ -1,5 +1,5 @@
 import { BaseError } from '@/errors';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PubSub } from 'graphql-subscriptions';
 import { ResultAsync } from 'neverthrow';
 import { ObjectType } from 'simplytyped';
@@ -9,6 +9,7 @@ import * as Recipe from './recipe.providers';
 
 @Injectable()
 export class AddRecipeUseCase {
+  private readonly logger = new Logger(this.constructor.name);
   constructor(
     private readonly pubSub: PubSub,
     @Recipe.InjectAggregateRepository()
@@ -36,6 +37,7 @@ export class AddRecipeUseCase {
           await this.pubSub.publish('recipeAdded', { recipeAdded });
         },
         async error => {
+          this.logger.warn(`Failed create projection: ${error.message}`);
           // if (error.code === 'P2002'/* Unique constraint failed */)
           recipe.removeRecipe({ reason: error.message.trim() });
           await recipe.commit();

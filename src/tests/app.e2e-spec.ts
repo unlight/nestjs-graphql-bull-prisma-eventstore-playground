@@ -23,8 +23,8 @@ before(async () => {
     imports: [AppModule],
   }).compile();
   app = testingModule.createNestApplication();
-  configureApp(app);
-  // app.useLogger(false);
+  configureApp(app, { logEvents: true });
+  // app.useLogger(false); // Disable all logs
 
   await app.init();
   graphqlRequest = createGraphqlRequest(app.getHttpServer());
@@ -51,6 +51,8 @@ it('read recipes', async () => {
   `);
 
   const { data, error } = await graphqlRequest(recipesQuery);
+
+  expect(error).toBeFalsy();
 });
 
 it('create recipe ok', async () => {
@@ -140,7 +142,7 @@ it('create and remove', async () => {
   );
 });
 
-it.only('revert recipe with non uniq code', async () => {
+it('revert recipe with non uniq code', async () => {
   // Arrange
   const service = await app.resolve(RecipeFinder);
   const addRecipe = graphql(`
