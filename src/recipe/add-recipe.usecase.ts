@@ -1,7 +1,7 @@
 import { BaseError } from '@/errors';
 import { Injectable } from '@nestjs/common';
 import { PubSub } from 'graphql-subscriptions';
-import { fromPromise } from 'neverthrow';
+import { ResultAsync } from 'neverthrow';
 import { ObjectType } from 'simplytyped';
 import { NewRecipeInput } from './dto/new-recipe.input';
 import { RecipeProjection } from './recipe.projection';
@@ -28,11 +28,8 @@ export class AddRecipeUseCase {
       props: { code: '', recipeId },
     });
 
-    await fromPromise(
-      (async () => {
-        await this.projection.create(recipeId);
-      })(),
-      error => RecipeError.normalize(error),
+    await ResultAsync.fromPromise(this.projection.create(recipeId), error =>
+      RecipeError.normalize(error),
     )
       .match(
         async recipeAdded => {
@@ -46,7 +43,7 @@ export class AddRecipeUseCase {
         },
       )
       .catch(cause => {
-        throw new RecipeError('Add failed:', { cause });
+        throw new RecipeError('Add recipe error:', { cause });
       });
   }
 }

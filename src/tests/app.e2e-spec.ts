@@ -43,7 +43,7 @@ it('smoke', () => {
 
 it('read recipes', async () => {
   const recipesQuery = graphql(`
-    query {
+    query getRecipe {
       recipes {
         id
       }
@@ -55,7 +55,6 @@ it('read recipes', async () => {
 
 it('create recipe ok', async () => {
   // Arrange
-  const queue: Queue = await app.resolve(getQueueToken('recipe'));
   const service = await app.resolve(RecipeFinder);
   const createRecipe = graphql(`
     mutation addRecipe($data: NewRecipeInput!) {
@@ -98,7 +97,6 @@ it('create recipe ok', async () => {
 
 it('create and remove', async () => {
   // Arrange
-  const queue: Queue = await app.resolve(getQueueToken('recipe'));
   const service = await app.resolve(RecipeFinder);
   const createRecipe = graphql(`
     mutation addRecipe($data: NewRecipeInput!) {
@@ -130,6 +128,8 @@ it('create and remove', async () => {
       },
     },
   );
+  expect(remove.error).toBeFalsy();
+
   await waitWhenAllJobsFinished(queue);
   // Assert
   const recipe = await service.findOneById(create.data.addRecipe);
@@ -142,7 +142,6 @@ it('create and remove', async () => {
 
 it.only('revert recipe with non uniq code', async () => {
   // Arrange
-  const queue: Queue = await app.resolve(getQueueToken('recipe'));
   const service = await app.resolve(RecipeFinder);
   const addRecipe = graphql(`
     mutation addRecipe($data: NewRecipeInput!) {

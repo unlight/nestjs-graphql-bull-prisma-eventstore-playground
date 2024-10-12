@@ -57,6 +57,11 @@ export default [
     },
   },
   {
+    rules: {
+      '@typescript-eslint/only-throw-error': 0, // https://github.com/ehmicky/modern-errors/issues/31
+    },
+  },
+  {
     files: ['**/*.spec.ts', '**/*.e2e-spec.ts'],
     rules: {
       'no-throw-literal': 0,

@@ -6,12 +6,13 @@ import { AddRecipeUseCase } from './add-recipe.usecase';
 import { NewRecipeInput } from './dto/new-recipe.input';
 import { RemoveRecipeInput } from './dto/remove-recipe.input';
 import { RemoveRecipeUseCase } from './remove-recipe.usecase';
+import { QUEUE_NAME } from './recipe.constants';
 
 type AddRecipeJob = Job<ObjectType<NewRecipeInput>, void, 'addRecipe'>;
 type RemoveRecipeJob = Job<ObjectType<RemoveRecipeInput>, void, 'removeRecipe'>;
 type Jobs = AddRecipeJob | RemoveRecipeJob;
 
-@Processor('recipe')
+@Processor(QUEUE_NAME)
 export class RecipeProcessor extends WorkerHost {
   private readonly logger = new Logger(this.constructor.name);
 

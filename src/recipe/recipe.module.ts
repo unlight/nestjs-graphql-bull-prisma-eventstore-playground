@@ -12,17 +12,18 @@ import { AddRecipeUseCase } from './add-recipe.usecase';
 import { RemoveRecipeUseCase } from './remove-recipe.usecase';
 import { RecipeProjection } from './recipe.projection';
 import { RecipeFinder } from './recipe.finder';
+import * as recipeConstants from './recipe.constants';
 
 @Module({
   imports: [
     Modules.Prisma,
     CqrxModule.forFeature([RecipeAggregate]),
     BullModule.registerQueue({
-      name: 'recipe',
+      name: recipeConstants.QUEUE_NAME,
     }),
     BullBoardModule.forFeature({
       adapter: BullAdapter,
-      name: 'recipe',
+      name: recipeConstants.QUEUE_NAME,
     }),
   ],
   providers: [

@@ -24,11 +24,12 @@ import { RemoveRecipeInput } from './dto/remove-recipe.input';
 import { RecipeFinder } from './recipe.finder';
 import { transformAndValidate } from 'class-transformer-validator';
 import { UnknownError } from '@/errors';
+import { QUEUE_NAME } from './recipe.constants';
 
 @Resolver(() => Recipe)
 export class RecipeResolver implements OnModuleDestroy {
   constructor(
-    @InjectQueue('recipe') private queue: Queue,
+    @InjectQueue(QUEUE_NAME) private queue: Queue,
     private readonly service: RecipeFinder,
     private readonly pubSub: PubSub,
   ) {}
