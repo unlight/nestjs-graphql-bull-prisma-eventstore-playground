@@ -12,7 +12,6 @@
     "tscheck": "tsc --noEmit",
     "tscheck:w": "npm run tscheck -- --watch",
     "eslint": "eslint src/**/*.ts",
-    "test:e2e": "npm run mocha -- \"**/*.e2e-spec.ts\" --no-timeouts --watch-files src",
     "mocha": "node -r ts-node/register node_modules/mocha/bin/mocha",
     "prisma:g": "prisma generate",
     "postinstall": "patch-package",
@@ -20,7 +19,8 @@
     "graphqlenv:g": "ts-node scripts/generate-graphql-env.ts",
     "test": "npm run eslint && npm run test:r -- -R spec",
     "test:r": "instant-mocha \"src/**/*.spec.ts\" --webpack-config=webpack.config.cjs -R spec",
-    "test:w": "npm run test:r -- --w"
+    "test:w": "npm run test:r -- --watch",
+    "test:e2e": "instant-mocha \"**/*.e2e-spec.ts\" --webpack-config=webpack.config.cjs -R spec --watch-files src"
   },
   "license": "ISC",
   "type": "commonjs",

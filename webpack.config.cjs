@@ -15,7 +15,7 @@ if (!existsSync(path.resolve(outputPath, 'node_modules'))) {
 }
 
 module.exports = (env, options) => {
-  const isTestMode = process.argv.some(arg => arg.includes('.spec.ts'));
+  const isTestMode = process.argv.some(arg => arg.includes('instant-mocha'));
   const transpileModules = [
     'pupa',
     'modern-errors',
