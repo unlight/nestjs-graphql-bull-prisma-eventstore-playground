@@ -11,7 +11,7 @@ import * as Modules from '../modules'; // must be imported last
 import { AddRecipeUseCase } from './add-recipe.usecase';
 import { RemoveRecipeUseCase } from './remove-recipe.usecase';
 import { RecipeProjection } from './recipe.projection';
-import { RecipeService } from './recipe.service';
+import { RecipeFinder } from './recipe.finder';
 
 @Module({
   imports: [
@@ -32,7 +32,7 @@ import { RecipeService } from './recipe.service';
     RecipeProjection,
     AddRecipeUseCase,
     RemoveRecipeUseCase,
-    RecipeService,
+    RecipeFinder,
   ],
 })
 export class RecipeModule {}

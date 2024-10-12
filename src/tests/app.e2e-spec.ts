@@ -12,7 +12,7 @@ import { VariablesOf, graphql } from 'gql.tada';
 import { AppModule, configureApp } from '../app.module';
 import { setTimeout } from 'timers/promises';
 import { uniqueId } from 'lodash';
-import { RecipeService } from '../recipe/recipe.service';
+import { RecipeFinder } from '../recipe/recipe.finder';
 
 let app: INestApplication;
 let graphqlRequest: GraphqlRequestFunction;
@@ -56,7 +56,7 @@ it('read recipes', async () => {
 it('create recipe ok', async () => {
   // Arrange
   const queue: Queue = await app.resolve(getQueueToken('recipe'));
-  const service = await app.resolve(RecipeService);
+  const service = await app.resolve(RecipeFinder);
   const createRecipe = graphql(/* GraphQL */ `
     mutation addRecipe($data: NewRecipeInput!) {
       addRecipe(data: $data)

@@ -21,7 +21,7 @@ import { PubSub } from 'graphql-subscriptions';
 import { GraphQLResolveInfo } from 'graphql';
 import { PrismaSelect } from '@paljs/plugins';
 import { RemoveRecipeInput } from './dto/remove-recipe.input';
-import { RecipeService } from './recipe.service';
+import { RecipeFinder } from './recipe.finder';
 import { transformAndValidate } from 'class-transformer-validator';
 import { UnknownError } from '@/errors';
 
@@ -29,7 +29,7 @@ import { UnknownError } from '@/errors';
 export class RecipeResolver implements OnModuleDestroy {
   constructor(
     @InjectQueue('recipe') private queue: Queue,
-    private readonly service: RecipeService,
+    private readonly service: RecipeFinder,
     private readonly pubSub: PubSub,
   ) {}
 

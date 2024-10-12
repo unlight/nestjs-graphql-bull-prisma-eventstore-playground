@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { RecipeAggregate } from './recipe.aggregate';
 import * as Recipe from './recipe.providers';
-import { RecipeService } from './recipe.service';
+import { RecipeFinder } from './recipe.finder';
 
 /**
  * Mutate (write only) recipes to repository.
@@ -10,7 +10,7 @@ import { RecipeService } from './recipe.service';
 @Injectable()
 export class RecipeProjection {
   constructor(
-    private readonly service: RecipeService,
+    private readonly finder: RecipeFinder,
     @Recipe.InjectProjectionRepository()
     private readonly repository: Recipe.ProjectionRepository,
     @Recipe.InjectAggregateRepository()
@@ -32,7 +32,7 @@ export class RecipeProjection {
   }
 
   async update(id: string) {
-    if (!(await this.service.exists(id))) {
+    if (!(await this.finder.exists(id))) {
       return;
     }
 

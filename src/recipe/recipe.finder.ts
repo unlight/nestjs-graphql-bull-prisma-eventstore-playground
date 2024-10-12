@@ -7,7 +7,7 @@ import * as Recipe from './recipe.providers';
  * Query (read only) recipe from projection repository.
  */
 @Injectable()
-export class RecipeService {
+export class RecipeFinder {
   constructor(
     @Recipe.InjectProjectionRepository()
     private readonly repository: Recipe.ProjectionRepository,

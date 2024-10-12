@@ -1,21 +1,18 @@
+import { BaseError } from '@/errors';
 import { Injectable } from '@nestjs/common';
 import { PubSub } from 'graphql-subscriptions';
 import { fromPromise } from 'neverthrow';
 import { ObjectType } from 'simplytyped';
 import { NewRecipeInput } from './dto/new-recipe.input';
 import { RecipeProjection } from './recipe.projection';
-import {
-  InjectAggregateRepository,
-  AggregateRepository,
-} from './recipe.providers';
-import { BaseError } from '@/errors';
+import * as Recipe from './recipe.providers';
 
 @Injectable()
 export class AddRecipeUseCase {
   constructor(
     private readonly pubSub: PubSub,
-    @InjectAggregateRepository()
-    private readonly aggregateRepository: AggregateRepository,
+    @Recipe.InjectAggregateRepository()
+    private readonly store: Recipe.AggregateRepository,
     private readonly projection: RecipeProjection,
   ) {}
 
@@ -23,8 +20,7 @@ export class AddRecipeUseCase {
     recipeId: string,
     objectData: ObjectType<NewRecipeInput>,
   ): Promise<void> {
-    debugger;
-    const recipe = this.aggregateRepository.create(recipeId);
+    const recipe = this.store.create(recipeId);
     await recipe.addRecipe({ findExisting: () => void 0, objectData });
     await recipe.commit();
 
