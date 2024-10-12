@@ -4,6 +4,7 @@ const NodemonPlugin = require('nodemon-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const lnk = require('lnk');
 const { existsSync } = require('fs');
+const { webpack: workspaceAliases } = require('workspace-alias');
 
 const applicationId = 'nestjs-graphql-bull-prisma-eventstore-playground';
 const outputPath = path.join(process.env.TEMP, applicationId); // Bound to memory FS
@@ -14,6 +15,7 @@ if (!existsSync(path.resolve(outputPath, 'node_modules'))) {
 }
 
 module.exports = (env, options) => {
+  const isTestMode = process.argv.some(arg => arg.includes('.spec.ts'));
   const transpileModules = [
     'pupa',
     'modern-errors',
@@ -70,23 +72,34 @@ module.exports = (env, options) => {
         },
       ],
     },
+    optimization: {
+      minimize: false,
+      moduleIds: 'named',
+      chunkIds: 'named',
+    },
     mode: 'development',
     resolve: {
-      extensions: ['.tsx', '.ts', '.js'],
+      extensions: ['.tsx', '.ts', '.js', '.json'],
+      alias: workspaceAliases(),
       plugins: [new TsconfigPathsPlugin()],
     },
     plugins: [
-      new NodemonPlugin({
-        script: path.resolve(outputPath, 'main.cjs'),
-        watch: path.resolve(outputPath, 'main.cjs'),
-        delay: 500,
-        verbose: false,
-        ...(env.inspect && { nodeArgs: ['--inspect'] }),
-      }),
+      !isTestMode &&
+        new NodemonPlugin({
+          script: path.resolve(outputPath, 'main.cjs'),
+          watch: path.resolve(outputPath, 'main.cjs'),
+          delay: 500,
+          verbose: false,
+          ...(env.inspect && { nodeArgs: ['--inspect'] }),
+        }),
     ],
     output: {
       path: outputPath,
       filename: 'main.cjs',
+      // use absolute paths in sourcemaps (important for debugging via IDE)
+      devtoolModuleFilenameTemplate: '[absolute-resource-path]',
+      devtoolFallbackModuleFilenameTemplate: '[absolute-resource-path]?[hash]',
+      iife: false,
     },
   };
 
