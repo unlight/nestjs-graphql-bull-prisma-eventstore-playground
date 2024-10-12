@@ -27,7 +27,7 @@ export class RecipeAggregate
   isActive: boolean = false;
   removedAt?: Date;
   removeReason?: string;
-  code?: string;
+  code: string = '';
   ingredients?: string[];
 
   @EventHandler(RecipeAdded)

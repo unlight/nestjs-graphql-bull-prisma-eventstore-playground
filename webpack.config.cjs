@@ -45,7 +45,7 @@ module.exports = (env, options) => {
         allowlist: transpileModules,
       }),
     ],
-    devtool: false,
+    devtool: 'inline-source-map',
     module: {
       rules: [
         { parser: { amd: false } },

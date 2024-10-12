@@ -4,7 +4,7 @@ type RecipeAddedData = {
   title: string;
   id: string;
   addedAt: Date;
-  code?: string;
+  code: string;
   ingredients?: string[];
 };
 

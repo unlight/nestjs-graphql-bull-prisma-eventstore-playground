@@ -59,6 +59,7 @@ export default [
   {
     files: ['**/*.spec.ts', '**/*.e2e-spec.ts'],
     rules: {
+      'no-throw-literal': 0,
       'consistent-return': 0,
       'max-lines': 0,
       '@typescript-eslint/no-explicit-any': 0,

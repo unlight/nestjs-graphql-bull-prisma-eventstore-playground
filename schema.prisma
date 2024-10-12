@@ -14,13 +14,11 @@ model Recipe {
   id String @id @default(cuid()) @map("_id")
   isAggregating Boolean @default(false)
   title String
-  /// Uniq code, test purpose check uniq in code
-  code String? @unique
+  code String @unique
   description String @default("")
   creationDate DateTime @default(now())
   ingredients String[]
   isActive Boolean
-  technicalIssues String[]
   removeReason String @default("")
 }
 

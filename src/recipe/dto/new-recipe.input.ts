@@ -15,6 +15,6 @@ export class NewRecipeInput {
   @Field(() => [String])
   ingredients: string[] = [];
 
-  @Field(() => String, { nullable: true })
-  code?: string;
+  @Field(() => String)
+  code: string = '';
 }

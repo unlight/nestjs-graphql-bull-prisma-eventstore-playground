@@ -23,7 +23,7 @@ export class RecipeProjection {
     argument: string | RecipeAggregate,
   ): Promise<Recipe.CreateResult> {
     const [id, recipe] = await this.store.streamIdAndAggregate(argument);
-    const data: Prisma.RecipeCreateInput = {
+    const data = {
       ...this.getUpdateData(recipe),
       id,
     };
@@ -50,7 +50,6 @@ export class RecipeProjection {
 
   private getUpdateData(recipe: RecipeAggregate) {
     return {
-      boo: 1,
       code: recipe.code,
       creationDate: recipe.addedAt,
       description: recipe.description,
@@ -58,6 +57,6 @@ export class RecipeProjection {
       isActive: recipe.isActive,
       isAggregating: false,
       title: recipe.title,
-    };
+    } satisfies Prisma.RecipeUpdateInput;
   }
 }
