@@ -24,7 +24,7 @@ import { RemoveRecipeInput } from './dto/remove-recipe.input';
 import { RecipeFinder } from './recipe.finder';
 import { transformAndValidate } from 'class-transformer-validator';
 import { UnknownError } from '@/errors';
-import { QUEUE_NAME } from './recipe.constants';
+import { ADD_RECIPE, QUEUE_NAME, REMOVE_RECIPE } from './recipe.constants';
 
 @Resolver(() => Recipe)
 export class RecipeResolver implements OnModuleDestroy {
@@ -55,7 +55,7 @@ export class RecipeResolver implements OnModuleDestroy {
 
   @Mutation(() => String)
   async addRecipe(@Args('data') data: NewRecipeInput): Promise<string> {
-    const job = await this.queue.add('addRecipe', data, {
+    const job = await this.queue.add(ADD_RECIPE, data, {
       jobId: createId(),
     });
     return String(job.id);
@@ -63,7 +63,7 @@ export class RecipeResolver implements OnModuleDestroy {
 
   @Mutation(() => String)
   async removeRecipe(@Args('data') data: RemoveRecipeInput): Promise<string> {
-    const job = await this.queue.add('removeRecipe', data);
+    const job = await this.queue.add(REMOVE_RECIPE, data);
     return String(job.id);
   }
 

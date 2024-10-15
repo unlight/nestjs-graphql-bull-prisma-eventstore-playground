@@ -6,7 +6,7 @@ import { AddRecipeUseCase } from './add-recipe.usecase';
 import { NewRecipeInput } from './dto/new-recipe.input';
 import { RemoveRecipeInput } from './dto/remove-recipe.input';
 import { RemoveRecipeUseCase } from './remove-recipe.usecase';
-import { QUEUE_NAME } from './recipe.constants';
+import { ADD_RECIPE, QUEUE_NAME, REMOVE_RECIPE } from './recipe.constants';
 
 type AddRecipeJob = Job<ObjectType<NewRecipeInput>, void, 'addRecipe'>;
 type RemoveRecipeJob = Job<ObjectType<RemoveRecipeInput>, void, 'removeRecipe'>;
@@ -25,9 +25,9 @@ export class RecipeProcessor extends WorkerHost {
 
   async process(job: Jobs): Promise<unknown> {
     switch (job.name) {
-      case 'addRecipe':
+      case ADD_RECIPE:
         return this.addRecipe(job);
-      case 'removeRecipe':
+      case REMOVE_RECIPE:
         return this.removeRecipe(job);
     }
   }
