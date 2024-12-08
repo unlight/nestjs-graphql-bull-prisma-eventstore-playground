@@ -88,7 +88,7 @@ module.exports = (env, options) => {
         new NodemonPlugin({
           script: path.resolve(outputPath, 'main.cjs'),
           watch: path.resolve(outputPath, 'main.cjs'),
-          delay: 500,
+          // delay: 500,
           verbose: false,
           ...(env.inspect && { nodeArgs: ['--inspect'] }),
         }),

@@ -8,7 +8,7 @@ import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { Queue, Worker } from 'bullmq';
 import { expect } from 'expect';
-import { AppModule, configureApp } from '../app.module';
+import { AppModule, initializeApplication } from '../app.module';
 import { AppEnvironment } from '../app.environment';
 
 let app: INestApplication;
@@ -21,11 +21,10 @@ before(async () => {
     imports: [AppModule, BullModule.registerQueue({ name: 'bull' })],
   }).compile();
   app = testingModule.createNestApplication();
-  configureApp(app, { logEvents: true });
+  initializeApplication(app, { logEvents: true });
   // app.useLogger(false); // Disable all logs
   env = await app.resolve(AppEnvironment);
 
-  await app.init();
   graphqlRequest = createGraphqlRequest(app.getHttpServer());
 
   queue = await app.resolve(getQueueToken('bull'));

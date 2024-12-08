@@ -96,7 +96,7 @@ export class RecipeResolver implements OnModuleDestroy {
 
   @Subscription(() => Recipe)
   recipeAdded() {
-    return this.pubSub.asyncIterator('recipeAdded');
+    return this.pubSub.asyncIterableIterator('recipeAdded');
   }
 
   async onModuleDestroy() {

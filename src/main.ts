@@ -1,11 +1,17 @@
 import { NestFactory } from '@nestjs/core';
 import { AppEnvironment } from './app.environment';
-import { AppModule, configureApp } from './app.module';
+import { AppModule, initializeApplication } from './app.module';
+import { NestoLogger } from 'nestolog';
 
-NestFactory.create(AppModule).then(async app => {
-  configureApp(app);
-  await app.init();
+const logger = new NestoLogger({} as any);
 
-  const appEnvironment = app.get(AppEnvironment);
-  await app.listen(appEnvironment.port);
-});
+NestFactory.create(AppModule, { logger })
+  .then(async app => {
+    await initializeApplication(app);
+
+    const appEnvironment = app.get(AppEnvironment);
+    await app.listen(appEnvironment.port);
+  })
+  .catch(error => {
+    throw error;
+  });

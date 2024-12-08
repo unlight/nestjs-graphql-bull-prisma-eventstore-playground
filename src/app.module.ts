@@ -78,7 +78,10 @@ type ConfigureApp = {
   logEvents?: boolean;
 };
 
-export function configureApp(app: INestApplication, options?: ConfigureApp) {
+export async function initializeApplication(
+  app: INestApplication,
+  options?: ConfigureApp,
+) {
   app.enableCors();
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.useGlobalPipes(
@@ -101,4 +104,6 @@ export function configureApp(app: INestApplication, options?: ConfigureApp) {
       logger.verbose(event);
     });
   }
+
+  await app.init();
 }

@@ -11,7 +11,7 @@ import { randomInt } from 'crypto';
 import { expect } from 'expect';
 import { VariablesOf, graphql } from 'gql.tada';
 import { uniqueId } from 'lodash';
-import { AppModule, configureApp } from '../app.module';
+import { AppModule, initializeApplication } from '../app.module';
 import { RecipeFinder } from '../recipe/recipe.finder';
 
 let app: INestApplication;
@@ -23,10 +23,9 @@ before(async () => {
     imports: [AppModule],
   }).compile();
   app = testingModule.createNestApplication();
-  configureApp(app, { logEvents: true });
+  initializeApplication(app, { logEvents: true });
   // app.useLogger(false); // Disable all logs
 
-  await app.init();
   graphqlRequest = createGraphqlRequest(app.getHttpServer());
 
   queue = await app.resolve(getQueueToken('recipe'));
