@@ -5618,10 +5618,10 @@ nestjs-cqrx@^3.0.3:
     node-is-class "^1.0.4"
     tslib "^2.7.0"
 
-nestolog@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/nestolog/-/nestolog-3.0.0.tgz#908fc1655ac5c45ab7e1d45faef05aa683307097"
-  integrity sha512-71om+TeVlxQFFR8qQ84bCYPJ3szUXic9YkQrKiEQjAb4ZeGrDDter9fYHUWULy2bINczM8eAmAC1HmAO1kha7w==
+nestolog@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/nestolog/-/nestolog-3.1.0.tgz#86ce921f1ac3be5834901e2cd06c2ef2850c016b"
+  integrity sha512-t+RQmRtU/v7XdUTw47cN5BbzVpqOWHB/ZmB8AUU1/rMrTjafURUZXD3QDLVNYAGmoqzUNowQrVEFgfhClG4zTw==
   dependencies:
     ansicolor "^2.0.3"
     ololog "^1.1.175"

@@ -3,9 +3,7 @@ import { AppEnvironment } from './app.environment';
 import { AppModule, initializeApplication } from './app.module';
 import { NestoLogger } from 'nestolog';
 
-const logger = new NestoLogger({} as any);
-
-NestFactory.create(AppModule, { logger })
+NestFactory.create(AppModule, { logger: NestoLogger.create() })
   .then(async app => {
     await initializeApplication(app);
 
