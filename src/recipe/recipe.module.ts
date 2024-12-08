@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bullmq';
 import { PubSub } from 'graphql-subscriptions';
 import { CqrxModule } from 'nestjs-cqrx';
-import { BullAdapter } from '@bull-board/api/bullAdapter';
+import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { BullBoardModule } from '@bull-board/nestjs';
 import { RecipeAggregate } from './recipe.aggregate';
 import { RecipeResolver } from './recipe.resolver';
@@ -22,7 +22,7 @@ import * as recipeConstants from './recipe.constants';
       name: recipeConstants.QUEUE_NAME,
     }),
     BullBoardModule.forFeature({
-      adapter: BullAdapter,
+      adapter: BullMQAdapter,
       name: recipeConstants.QUEUE_NAME,
     }),
   ],
