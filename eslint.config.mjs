@@ -1,35 +1,33 @@
 import 'eslint-plugin-only-warn';
 
+import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import pluginJs from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import sonarjs from 'eslint-plugin-sonarjs';
 import prettier from 'eslint-plugin-prettier/recommended';
-import * as unicorn from 'eslint-plugin-unicorn';
+import unicorn from 'eslint-plugin-unicorn';
 import perfectionist from 'eslint-plugin-perfectionist';
 
-/** @type {import('@typescript-eslint/utils').TSESLint.FlatConfig.ConfigFile} */
-export default [
+export default defineConfig(
+  pluginJs.configs.recommended,
+  tseslint.configs.recommended,
+  tseslint.configs.recommendedTypeChecked,
+  unicorn.configs.recommended,
+  sonarjs.configs.recommended,
+  prettier,
   {
-    ignores: ['dist/', 'coverage/', 'eslint.tsconfig.mjs', 'webpack.config.*'],
+    ignores: ['dist/', 'coverage/'],
     languageOptions: {
       globals: globals.node,
       parserOptions: {
         project: ['./tsconfig.json'],
-        warnOnUnsupportedTypeScriptVersion: false,
         tsconfigRootDir: import.meta.dirname,
+        warnOnUnsupportedTypeScriptVersion: false,
       },
     },
   },
-  pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
-  ...tseslint.configs.recommendedTypeChecked,
-
-  // sonarjs.configs.recommended,
-
-  prettier,
   {
-    ...unicorn.configs['flat/recommended'],
     rules: {
       'unicorn/prevent-abbreviations': [
         'warn',
@@ -50,8 +48,8 @@ export default [
       'perfectionist/sort-objects': [
         'warn',
         {
-          type: 'natural',
           order: 'asc',
+          type: 'natural',
         },
       ],
     },
@@ -62,16 +60,25 @@ export default [
     },
   },
   {
+    extends: [tseslint.configs.disableTypeChecked],
+    files: [
+      '*.config.mjs',
+      '*.config.mts',
+      '.remarkrc.cjs',
+      'stryker.conf.mjs',
+    ],
+  },
+  {
     files: ['**/*.spec.ts', '**/*.e2e-spec.ts'],
     rules: {
-      'no-throw-literal': 0,
-      'consistent-return': 0,
-      'max-lines': 0,
+      '@typescript-eslint/camelcase': 0,
       '@typescript-eslint/no-explicit-any': 0,
       '@typescript-eslint/no-floating-promises': 0,
       '@typescript-eslint/no-non-null-assertion': 0,
-      '@typescript-eslint/camelcase': 0,
+      'consistent-return': 0,
       'import/max-dependencies': 0,
+      'max-lines': 0,
+      'no-throw-literal': 0,
     },
   },
-];
+);

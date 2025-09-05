@@ -54,7 +54,7 @@ const GraphQLRootModule = GraphQLModule.forRootAsync({
     BullModule.forRootAsync({
       imports: [Modules.Environment],
       inject: [AppEnvironment],
-      useFactory(environment: AppEnvironment): BullRootModuleOptions {
+      useFactory(): BullRootModuleOptions {
         return {
           connection: {
             host: 'localhost',
@@ -78,7 +78,7 @@ type ConfigureApp = {
   logEvents?: boolean;
 };
 
-export async function initializeApplication(
+export async function configureApplication(
   app: INestApplication,
   options?: ConfigureApp,
 ) {

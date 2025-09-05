@@ -7,11 +7,11 @@ import { getQueueToken } from '@nestjs/bullmq';
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { Queue } from 'bullmq';
-import { randomInt } from 'crypto';
+import { randomInt } from 'node:crypto';
 import { expect } from 'expect';
 import { VariablesOf, graphql } from 'gql.tada';
 import { uniqueId } from 'lodash';
-import { AppModule, initializeApplication } from '../app.module';
+import { AppModule, configureApplication } from '../app.module';
 import { RecipeFinder } from '../recipe/recipe.finder';
 
 let app: INestApplication;
@@ -23,7 +23,7 @@ before(async () => {
     imports: [AppModule],
   }).compile();
   app = testingModule.createNestApplication();
-  initializeApplication(app, { logEvents: true });
+  configureApplication(app, { logEvents: true });
   // app.useLogger(false); // Disable all logs
 
   graphqlRequest = createGraphqlRequest(app.getHttpServer());
@@ -151,7 +151,7 @@ it('revert recipe with non uniq code', async () => {
   `);
   const code = Math.random().toString(36).slice(2);
   const data: VariablesOf<typeof addRecipe>['data'] = {
-    code: code,
+    code,
     title: 'aqew 1',
   };
   // Act
@@ -168,5 +168,6 @@ it('revert recipe with non uniq code', async () => {
 
   const result = [recipe1, recipe2].filter(Boolean);
 
+  expect(result).toHaveLength(1);
   expect(result[0]).toEqual(expect.objectContaining({ code, isActive: true }));
 });
