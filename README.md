@@ -36,4 +36,4 @@
 
 ## Issues
 
-- Unique keys with multiple null values not possible https://github.com/prisma/prisma/discussions/11558
+- MongoDB: Unique keys with multiple null values not possible https://github.com/prisma/prisma/discussions/11558 https://github.com/prisma/prisma/issues/3387
