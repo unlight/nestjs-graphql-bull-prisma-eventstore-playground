@@ -20,7 +20,7 @@ export function createGraphqlFormatError() {
       stacktrace: error.stack,
     };
     const flatData = flatten<unknown, JsonObject>(error, {
-      delimiter: '_',
+      delimiter: '.',
     });
 
     // console.log('textData', textData);
@@ -43,6 +43,7 @@ export function createGraphqlFormatError() {
 
     const result = {
       message,
+      // eslint-disable-next-line perfectionist/sort-objects
       path: castArray(path).join('.'),
       // eslint-disable-next-line perfectionist/sort-objects
       extensions,
