@@ -1,28 +1,24 @@
 services:
-  eventstoredb:
-    image: ghcr.io/eventstore/eventstore:22.10.6-alpha.0.12-alpine
+  kurrentdb:
+    image: kurrentplatform/kurrentdb:25.0.1-x64-8.0-bookworm-slim
     environment:
-      - EVENTSTORE_CLUSTER_SIZE=1
-      - EVENTSTORE_RUN_PROJECTIONS=System # All, None, System
-      - EVENTSTORE_START_STANDARD_PROJECTIONS=true
-      - EVENTSTORE_EXT_TCP_PORT=1113
-      - EVENTSTORE_HTTP_PORT=2113
-      - EVENTSTORE_INSECURE=true
-      - EVENTSTORE_ENABLE_EXTERNAL_TCP=true
-      - EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP=true
-      - EVENTSTORE_MEM_DB=true
+      KURRENTDB_CLUSTER_SIZE: 1
+      KURRENTDB_RUN_PROJECTIONS: 'All'
+      KURRENTDB_START_STANDARD_PROJECTIONS: 'true'
+      KURRENTDB_NODE_PORT: 2113
+      KURRENTDB_INSECURE: 'true'
+      KURRENTDB_ENABLE_ATOM_PUB_OVER_HTTP: 'true'
     ports:
-      - '1113:1113'
-      - '2113:2113'
+      - '34605:2113'
     volumes:
       - type: volume
-        source: eventstore-volume-data
-        target: /var/lib/eventstore
+        source: kurrentdb-volume-data
+        target: /var/lib/kurrentdb
       - type: volume
-        source: eventstore-volume-logs
-        target: /var/log/eventstore
-    networks:
-      - esdb_network
+        source: kurrentdb-volume-logs
+        target: /var/log/kurrentdb
+    # networks:
+    #   - esdb_network
 
   # mongo1:
   #   image: mongo:7.0
@@ -43,13 +39,13 @@ services:
   #     - 'mongo1_config:/data/configdb'
 
   redis:
-    image: redis:6-alpine
+    image: redis:8-alpine
     restart: always
     ports:
       - '6379:6379'
 
   postgres:
-    image: postgres:15-alpine
+    image: postgres:17-alpine
     command: postgres -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c random_page_cost=1.0
     restart: always
     environment:
@@ -63,14 +59,14 @@ services:
       - ${TEMP}/pg15data:/var/lib/postgresql/data
       # - db:/var/lib/postgresql/data
 
-networks:
-  esdb_network:
-    driver: bridge
+# networks:
+#   esdb_network:
+#     driver: bridge
 
 volumes:
   mongo1_data:
   mongo1_config:
-  eventstore-volume-data:
-  eventstore-volume-logs:
+  kurrentdb-volume-data:
+  kurrentdb-volume-logs:
   # db:
   #   driver: local

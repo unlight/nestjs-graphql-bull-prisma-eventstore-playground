@@ -15,7 +15,7 @@
 
 ## Links
 
-- http://localhost:2113/web/index.html#/streams
+- http://localhost:34605/web/index.html#/streams
 - http://localhost:3000/graphql
 - http://localhost:3000/queues
 
