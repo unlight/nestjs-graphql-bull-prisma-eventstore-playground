@@ -9,9 +9,7 @@
 
 ## Commands
 
-- npm run dev (swc ts-node)
-- npm run devw (webpack ts-loader)
-- npm run devw -- --env inspect
+- npm run start:dev
 
 ## Links
 
@@ -21,6 +19,7 @@
 
 ## TODO
 
+- EventStoreDB -> kurrentdb
 - match errors
 - viewRepository under read/write service
 - something with recipe service
