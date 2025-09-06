@@ -24,7 +24,7 @@
   "type": "commonjs",
   "dependencies": {
     "@apollo/server": "4.X",
-    "@eventstore/db-client": "^6.2.1",
+    "@kurrent/kurrentdb-client": "^1.0.4",
     "@nestjs-steroids/environment": "^1.0.2",
     "@nestjs/apollo": "^13.1.0",
     "@nestjs/bullmq": "^11.0.3",

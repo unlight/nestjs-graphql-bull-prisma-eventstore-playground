@@ -19,7 +19,7 @@
 
 ## TODO
 
-- EventStoreDB -> kurrentdb
+- EventStoreDB -> kurrentdb; update cqrx
 - update EVENTSTORE client
 - switch to esm
 - match errors
