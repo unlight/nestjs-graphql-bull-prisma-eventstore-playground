@@ -2,7 +2,8 @@ import 'eslint-plugin-only-warn';
 
 import pluginJs from '@eslint/js';
 import { defineConfig } from 'eslint/config';
-import importPlugin from 'eslint-plugin-import';
+import depend from 'eslint-plugin-depend';
+import importx from 'eslint-plugin-import-x';
 import perfectionist from 'eslint-plugin-perfectionist';
 import prettier from 'eslint-plugin-prettier/recommended';
 import sonarjs from 'eslint-plugin-sonarjs';
@@ -31,12 +32,9 @@ export default defineConfig(
     },
   },
   {
-    extends: [
-      importPlugin.flatConfigs.recommended,
-      importPlugin.flatConfigs.typescript,
-    ],
+    extends: [importx.flatConfigs.recommended, importx.flatConfigs.typescript],
     rules: {
-      'import/order': [
+      'import-x/order': [
         'warn',
         {
           alphabetize: {
@@ -107,6 +105,13 @@ export default defineConfig(
       '.remarkrc.cjs',
       'stryker.conf.mjs',
     ],
+    rules: {
+      'import-x/no-named-as-default-member': 0,
+    },
+  },
+  {
+    extends: ['depend/flat/recommended'],
+    plugins: { depend },
   },
   {
     files: ['**/*.spec.ts', '**/*.e2e-spec.ts'],
@@ -116,7 +121,7 @@ export default defineConfig(
       '@typescript-eslint/no-floating-promises': 0,
       '@typescript-eslint/no-non-null-assertion': 0,
       'consistent-return': 0,
-      'import/max-dependencies': 0,
+      'import-x/max-dependencies': 0,
       'max-lines': 0,
       'no-throw-literal': 0,
     },
