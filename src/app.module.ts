@@ -48,7 +48,7 @@ const GraphQLRootModule = GraphQLModule.forRootAsync({
       inject: [AppEnvironment],
       useFactory(environment: AppEnvironment) {
         return {
-          eventstoreDbConnectionString: environment.eventstoreConnectionString,
+          eventstoreConnectionString: environment.eventstoreConnectionString,
         };
       },
     }),

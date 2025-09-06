@@ -36,7 +36,7 @@ export class AppEnvironment {
   }
 
   @Env('EVENTSTORE_CONNECTION_STRING')
-  readonly eventstoreConnectionString = 'esdb://localhost:34605?tls=false';
+  readonly eventstoreConnectionString = 'kurrentdb://localhost:34605?tls=false';
 
   @Env('REDIS_CONNECTION_STRING')
   readonly redisConnectionString = 'redis://localhost:6379';

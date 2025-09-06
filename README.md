@@ -4,7 +4,7 @@
 
 - Nest.js Graphql
 - BullMQ
-- EventStoreDB
+- EventStoreDB (KurrentDB)
 - Prisma
 
 ## Commands
@@ -19,8 +19,6 @@
 
 ## TODO
 
-- EventStoreDB -> kurrentdb
-- update EVENTSTORE client
 - switch to esm
 - match errors
 - viewRepository under read/write service

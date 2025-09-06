@@ -24,7 +24,7 @@
   "type": "commonjs",
   "dependencies": {
     "@apollo/server": "4.X",
-    "@eventstore/db-client": "^6.2.1",
+    "@kurrent/kurrentdb-client": "^1.0.4",
     "@nestjs-steroids/environment": "^1.0.2",
     "@nestjs/apollo": "^13.1.0",
     "@nestjs/bullmq": "^11.0.3",
@@ -47,7 +47,7 @@
     "graphql-subscriptions": "^3.0.0",
     "modern-errors": "^7.1.2",
     "modern-errors-clean": "^6.0.1",
-    "nestjs-cqrx": "^3.0.3",
+    "nestjs-cqrx": "^4.0.2",
     "nestolog": "^3.1.1",
     "prisma-query-log": "^3.2.1",
     "reflect-metadata": "^0.2.2",
