@@ -21,8 +21,9 @@ import {
 import { TaskModule } from '@/job-task';
 
 import { AppEnvironment } from './app.environment';
-import * as Modules from './modules'; // import 2 (must be imported last)
 import { RecipeModule } from './recipe/recipe.module'; // import 1
+// eslint-disable-next-line import-x/order
+import * as Modules from './modules'; // import 2 (must be imported last)
 
 const GraphQLRootModule = GraphQLModule.forRootAsync({
   driver: ApolloDriver,

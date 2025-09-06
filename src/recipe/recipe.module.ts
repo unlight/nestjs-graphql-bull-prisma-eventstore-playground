@@ -11,9 +11,12 @@ import * as recipeConstants from './recipe.constants';
 import { RecipeFinder } from './recipe.finder';
 import { RecipeProcessor } from './recipe.processor';
 import { RecipeResolver } from './recipe.resolver';
-import * as Modules from '../modules'; // must be imported last
+// eslint-disable-next-line import-x/order
 import { RecipeProjection } from './recipe.projection';
+// eslint-disable-next-line import-x/order
 import { RemoveRecipeUseCase } from './remove-recipe.usecase';
+
+import * as Modules from '../modules'; // must be imported last
 
 @Module({
   imports: [
