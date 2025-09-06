@@ -20,6 +20,8 @@
 ## TODO
 
 - EventStoreDB -> kurrentdb
+- update EVENTSTORE client
+- switch to esm
 - match errors
 - viewRepository under read/write service
 - something with recipe service

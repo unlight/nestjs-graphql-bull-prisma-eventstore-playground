@@ -6,6 +6,7 @@
   "workspaces": ["src/app_modules/*"],
   "scripts": {
     "start:dev": "nest start --watch",
+    "dev": "onchange -v \"**/*.ts\" -k -i -- ts-node src/main.ts",
     "tscheck": "tsc --noEmit",
     "tscheck:w": "npm run tscheck -- --watch",
     "eslint": "eslint src/**/*.ts",
@@ -89,6 +90,7 @@
     "lnk-cli": "^1.0.1",
     "mocha": "^11.7.2",
     "neverthrow": "^8.2.0",
+    "onchange": "^7.1.0",
     "patch-package": "^8.0.0",
     "postinstall-postinstall": "^2.1.0",
     "prettier": "^3.6.2",

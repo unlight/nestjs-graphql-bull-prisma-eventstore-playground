@@ -35,8 +35,8 @@ export class AppEnvironment {
     return this.nodeEnvironment === NodeEnvironment.Development;
   }
 
-  @Env('EVENTSTORE_DB_CONNECTION_STRING')
-  readonly eventstoreDbConnectionString = 'esdb://localhost:34605?tls=false';
+  @Env('EVENTSTORE_CONNECTION_STRING')
+  readonly eventstoreConnectionString = 'esdb://localhost:34605?tls=false';
 
   @Env('REDIS_CONNECTION_STRING')
   readonly redisConnectionString = 'redis://localhost:6379';

@@ -48,8 +48,7 @@ const GraphQLRootModule = GraphQLModule.forRootAsync({
       inject: [AppEnvironment],
       useFactory(environment: AppEnvironment) {
         return {
-          eventstoreDbConnectionString:
-            environment.eventstoreDbConnectionString,
+          eventstoreDbConnectionString: environment.eventstoreConnectionString,
         };
       },
     }),
@@ -57,11 +56,10 @@ const GraphQLRootModule = GraphQLModule.forRootAsync({
     BullModule.forRootAsync({
       imports: [Modules.Environment],
       inject: [AppEnvironment],
-      useFactory(): BullRootModuleOptions {
+      useFactory(environment: AppEnvironment): BullRootModuleOptions {
         return {
           connection: {
-            host: 'localhost',
-            port: 6379,
+            url: environment.redisConnectionString,
           },
           defaultJobOptions: {},
         };
