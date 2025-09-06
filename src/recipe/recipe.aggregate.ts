@@ -1,6 +1,7 @@
 import { transformAndValidate } from 'class-transformer-validator';
 import { AggregateRoot, EventHandler } from 'nestjs-cqrx';
 import { ObjectType } from 'simplytyped';
+
 import { NewRecipeInput } from './dto/new-recipe.input';
 import {
   HandleRecipeEvents,

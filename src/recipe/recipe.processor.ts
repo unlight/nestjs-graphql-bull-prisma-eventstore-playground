@@ -2,11 +2,12 @@ import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { ObjectType } from 'simplytyped';
+
 import { AddRecipeUseCase } from './add-recipe.usecase';
 import { NewRecipeInput } from './dto/new-recipe.input';
 import { RemoveRecipeInput } from './dto/remove-recipe.input';
-import { RemoveRecipeUseCase } from './remove-recipe.usecase';
 import { ADD_RECIPE, QUEUE_NAME, REMOVE_RECIPE } from './recipe.constants';
+import { RemoveRecipeUseCase } from './remove-recipe.usecase';
 
 type AddRecipeJob = Job<ObjectType<NewRecipeInput>, void, 'addRecipe'>;
 type RemoveRecipeJob = Job<ObjectType<RemoveRecipeInput>, void, 'removeRecipe'>;
@@ -25,10 +26,12 @@ export class RecipeProcessor extends WorkerHost {
 
   async process(job: Jobs): Promise<unknown> {
     switch (job.name) {
-      case ADD_RECIPE:
+      case ADD_RECIPE: {
         return this.addRecipe(job);
-      case REMOVE_RECIPE:
+      }
+      case REMOVE_RECIPE: {
         return this.removeRecipe(job);
+      }
     }
   }
 

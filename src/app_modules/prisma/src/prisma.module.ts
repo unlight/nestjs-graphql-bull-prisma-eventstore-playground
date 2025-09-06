@@ -1,15 +1,17 @@
+import { DynamicModule, Module } from '@nestjs/common';
+
 import { createRepositoryProviers } from './inject-repository.decorator';
 import {
   PRISMA_OPTIONS,
   createAsyncProviders,
   defaultPrismaOptions,
 } from './prisma.providers';
+import { PrismaRepository } from './prisma.repository';
+
 import type {
   PrismaModuleAsyncOptions,
   PrismaModuleOptions,
 } from './prisma.providers';
-import { PrismaRepository } from './prisma.repository';
-import { DynamicModule, Module } from '@nestjs/common';
 
 @Module({})
 export class PrismaModule {

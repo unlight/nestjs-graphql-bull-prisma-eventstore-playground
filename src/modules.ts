@@ -1,7 +1,9 @@
-import { NestologModule } from 'nestolog';
-import { AppEnvironment } from './app.environment';
 import { EnvironmentModule } from '@nestjs-steroids/environment';
+import { NestologModule } from 'nestolog';
+
 import { PrismaModule } from '@/nestjs-prisma';
+
+import { AppEnvironment } from './app.environment';
 
 export const Nestolog = NestologModule.register({});
 export const Environment = EnvironmentModule.forRoot({

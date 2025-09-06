@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+
 import { RecipesArgs } from './dto/recipes.args';
 import { Recipe as RecipeObject } from './recipe.model';
 import * as Recipe from './recipe.providers';
@@ -19,7 +20,7 @@ export class RecipeFinder {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async findAll(recipesArgs: RecipesArgs): Promise<RecipeObject[]> {
-    return Promise.resolve([] as RecipeObject[]);
+    return [] as RecipeObject[];
   }
 
   async exists(id: string) {

@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+
 import { RecipeAggregate } from './recipe.aggregate';
-import * as Recipe from './recipe.providers';
 import { RecipeFinder } from './recipe.finder';
+import * as Recipe from './recipe.providers';
 
 /**
  * Mutate (write only) recipes to repository.

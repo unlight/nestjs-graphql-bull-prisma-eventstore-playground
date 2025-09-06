@@ -1,7 +1,9 @@
 import { Prisma, PrismaClient } from '@prisma/client';
-import { InjectRepository, PrismaRepository } from '@/nestjs-prisma';
-import { RecipeAggregate } from './recipe.aggregate';
 import * as cqrx from 'nestjs-cqrx';
+
+import { InjectRepository, PrismaRepository } from '@/nestjs-prisma';
+
+import { RecipeAggregate } from './recipe.aggregate';
 
 const name = 'recipe';
 type name = typeof name;

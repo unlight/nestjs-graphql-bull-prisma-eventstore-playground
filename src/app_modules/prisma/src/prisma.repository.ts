@@ -1,5 +1,3 @@
-import { PRISMA_OPTIONS } from './prisma.providers';
-import type { PrismaModuleOptions } from './prisma.providers';
 import {
   Inject,
   Injectable,
@@ -9,6 +7,10 @@ import {
 } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { createPrismaQueryEventHandler } from 'prisma-query-log';
+
+import { PRISMA_OPTIONS } from './prisma.providers';
+
+import type { PrismaModuleOptions } from './prisma.providers';
 
 /**
  * Prisma client as nestjs service.

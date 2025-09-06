@@ -1,7 +1,9 @@
+import { writeFileSync } from 'node:fs';
+
 import { ModulesContainer, NestFactory } from '@nestjs/core';
 import { GraphQLSchemaFactory, RESOLVER_TYPE_METADATA } from '@nestjs/graphql';
-import { writeFileSync } from 'fs';
 import { printSchema } from 'graphql';
+
 import { AppModule } from '../src/app.module';
 
 generateSchema();

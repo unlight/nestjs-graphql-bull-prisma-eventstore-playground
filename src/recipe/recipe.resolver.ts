@@ -1,7 +1,4 @@
 import { InjectQueue } from '@nestjs/bullmq';
-import { NewRecipeInput } from './dto/new-recipe.input';
-import { RecipesArgs } from './dto/recipes.args';
-import { Recipe } from './recipe.model';
 import {
   BadRequestException,
   NotFoundException,
@@ -15,16 +12,21 @@ import {
   Resolver,
   Subscription,
 } from '@nestjs/graphql';
-import { Queue } from 'bullmq';
-import { createId } from '@paralleldrive/cuid2';
-import { PubSub } from 'graphql-subscriptions';
-import { GraphQLResolveInfo } from 'graphql';
 import { PrismaSelect } from '@paljs/plugins';
-import { RemoveRecipeInput } from './dto/remove-recipe.input';
-import { RecipeFinder } from './recipe.finder';
+import { createId } from '@paralleldrive/cuid2';
+import { Queue } from 'bullmq';
 import { transformAndValidate } from 'class-transformer-validator';
+import { GraphQLResolveInfo } from 'graphql';
+import { PubSub } from 'graphql-subscriptions';
+
 import { UnknownError } from '@/errors';
+
+import { NewRecipeInput } from './dto/new-recipe.input';
+import { RecipesArgs } from './dto/recipes.args';
+import { RemoveRecipeInput } from './dto/remove-recipe.input';
 import { ADD_RECIPE, QUEUE_NAME, REMOVE_RECIPE } from './recipe.constants';
+import { RecipeFinder } from './recipe.finder';
+import { Recipe } from './recipe.model';
 
 @Resolver(() => Recipe)
 export class RecipeResolver implements OnModuleDestroy {
@@ -75,7 +77,7 @@ export class RecipeResolver implements OnModuleDestroy {
   @Query(() => Recipe)
   async error400(): Promise<Recipe> {
     const errors = await transformAndValidate(NewRecipeInput, {}).catch(
-      errors => errors,
+      error => error,
     );
     throw new BadRequestException(errors);
   }

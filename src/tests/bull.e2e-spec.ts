@@ -1,20 +1,22 @@
-import {
-  GraphqlRequestFunction,
-  createGraphqlRequest,
-  waitWhenAllJobsFinished,
-} from '@/test-utils';
 import { BullModule, getQueueToken } from '@nestjs/bullmq';
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { Queue, Worker } from 'bullmq';
 import { expect } from 'expect';
-import { AppModule, configureApplication } from '../app.module';
+
+import {
+  GraphqlRequestFunction,
+  createGraphqlRequest,
+  waitWhenAllJobsFinished,
+} from '@/test-utils';
+
 import { AppEnvironment } from '../app.environment';
+import { AppModule, configureApplication } from '../app.module';
 
 let app: INestApplication;
 let graphqlRequest: GraphqlRequestFunction;
 let queue: Queue;
-let env: AppEnvironment;
+let environment: AppEnvironment;
 
 before(async () => {
   const testingModule = await Test.createTestingModule({
@@ -23,7 +25,7 @@ before(async () => {
   app = testingModule.createNestApplication();
   configureApplication(app, { logEvents: true });
   // app.useLogger(false); // Disable all logs
-  env = await app.resolve(AppEnvironment);
+  environment = await app.resolve(AppEnvironment);
 
   graphqlRequest = createGraphqlRequest(app.getHttpServer());
 
@@ -56,7 +58,7 @@ it.skip('run parallel with same ids', async () => {
       // Log completion
       console.log(`Shipment ID: ${shipmentId} processed`);
     },
-    { connection: { url: env.redisConnectionString } },
+    { connection: { url: environment.redisConnectionString } },
   );
 
   worker.on('ready', () => {
@@ -70,8 +72,8 @@ it.skip('run parallel with same ids', async () => {
     console.log(`Job with ID ${job.id} has been completed`);
   });
 
-  worker.on('failed', (job, err) => {
-    console.error(`Job with ID ${job?.id} failed with error: ${err.message}`);
+  worker.on('failed', (job, error) => {
+    console.error(`Job with ID ${job?.id} failed with error: ${error.message}`);
   });
 
   const addShipmentToQueue = async shipment => {

@@ -4,10 +4,6 @@
  */
 export default {
   arrowParens: 'avoid',
-  importOrder: ['^[./]'],
-  importOrderParserPlugins: ['typescript', 'decorators-legacy'],
-  importOrderSeparation: true,
-  importOrderSortSpecifiers: true,
   printWidth: 80,
   semi: true,
   singleQuote: true,

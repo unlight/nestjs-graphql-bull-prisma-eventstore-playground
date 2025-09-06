@@ -1,5 +1,6 @@
-import { PrismaRepository } from './prisma.repository';
 import { Inject } from '@nestjs/common';
+
+import { PrismaRepository } from './prisma.repository';
 import { PrismaDelegateNames } from './types';
 
 const prismaRepositories = new Set<PrismaDelegateNames>();

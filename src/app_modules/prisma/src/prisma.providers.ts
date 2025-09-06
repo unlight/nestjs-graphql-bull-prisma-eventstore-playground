@@ -48,7 +48,6 @@ export function createAsyncOptionsProvider(
       inject: options.inject || [],
       provide: PRISMA_OPTIONS,
       useFactory: async (...args: any[]) => {
-        // eslint-disable-next-line sonarjs/prefer-immediate-return
         const result = {
           ...defaultPrismaOptions,
           ...(options.useFactory && (await options.useFactory(...args))),

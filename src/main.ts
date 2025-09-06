@@ -1,7 +1,8 @@
 import { NestFactory } from '@nestjs/core';
+import { NestoLogger } from 'nestolog';
+
 import { AppEnvironment } from './app.environment';
 import { AppModule, configureApplication } from './app.module';
-import { NestoLogger } from 'nestolog';
 
 NestFactory.create(AppModule, { logger: NestoLogger.create() })
   .then(async app => {

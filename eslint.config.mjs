@@ -1,13 +1,14 @@
 import 'eslint-plugin-only-warn';
 
-import { defineConfig } from 'eslint/config';
-import globals from 'globals';
 import pluginJs from '@eslint/js';
-import tseslint from 'typescript-eslint';
-import sonarjs from 'eslint-plugin-sonarjs';
-import prettier from 'eslint-plugin-prettier/recommended';
-import unicorn from 'eslint-plugin-unicorn';
+import { defineConfig } from 'eslint/config';
+import importPlugin from 'eslint-plugin-import';
 import perfectionist from 'eslint-plugin-perfectionist';
+import prettier from 'eslint-plugin-prettier/recommended';
+import sonarjs from 'eslint-plugin-sonarjs';
+import unicorn from 'eslint-plugin-unicorn';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 export default defineConfig(
   pluginJs.configs.recommended,
@@ -19,12 +20,51 @@ export default defineConfig(
   {
     ignores: ['dist/', 'coverage/'],
     languageOptions: {
+      ecmaVersion: 'latest',
       globals: globals.node,
       parserOptions: {
         project: ['./tsconfig.json'],
         tsconfigRootDir: import.meta.dirname,
         warnOnUnsupportedTypeScriptVersion: false,
       },
+      sourceType: 'module',
+    },
+  },
+  {
+    extends: [
+      importPlugin.flatConfigs.recommended,
+      importPlugin.flatConfigs.typescript,
+    ],
+    rules: {
+      'import/order': [
+        'warn',
+        {
+          alphabetize: {
+            caseInsensitive: false,
+            order: 'asc',
+            orderImportKind: 'asc',
+          },
+          groups: [
+            'builtin', // Node.js built-in modules (e.g., `fs`)
+            'external', // Packages from `node_modules`
+            'internal', // Absolute imports (via path aliases)
+            ['parent', 'sibling', 'index'], // Relative imports
+            'object', // Type imports (if using TypeScript)
+            'type', // Side-effect imports
+          ],
+          'newlines-between': 'always', // Add newlines between groups
+          pathGroups: [
+            {
+              // The predefined group this PathGroup is defined in relation to
+              group: 'external',
+              // Minimatch pattern used to match against specifiers
+              pattern: '@/**',
+              // How matching imports will be positioned relative to "group"
+              position: 'after',
+            },
+          ],
+        },
+      ],
     },
   },
   {

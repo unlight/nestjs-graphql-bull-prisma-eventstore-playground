@@ -76,6 +76,7 @@
     "await-to-js": "^3.0.0",
     "eslint": "^9.35.0",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-neverthrow": "^1.1.4",
     "eslint-plugin-only-warn": "^1.1.0",
     "eslint-plugin-perfectionist": "^4.15.0",

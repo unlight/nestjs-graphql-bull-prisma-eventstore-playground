@@ -1,16 +1,19 @@
+import { randomInt } from 'node:crypto';
+
+import { getQueueToken } from '@nestjs/bullmq';
+import { INestApplication } from '@nestjs/common';
+import { Test } from '@nestjs/testing';
+import { Queue } from 'bullmq';
+import { expect } from 'expect';
+import { VariablesOf, graphql } from 'gql.tada';
+import { uniqueId } from 'lodash';
+
 import {
   GraphqlRequestFunction,
   createGraphqlRequest,
   waitWhenAllJobsFinished,
 } from '@/test-utils';
-import { getQueueToken } from '@nestjs/bullmq';
-import { INestApplication } from '@nestjs/common';
-import { Test } from '@nestjs/testing';
-import { Queue } from 'bullmq';
-import { randomInt } from 'node:crypto';
-import { expect } from 'expect';
-import { VariablesOf, graphql } from 'gql.tada';
-import { uniqueId } from 'lodash';
+
 import { AppModule, configureApplication } from '../app.module';
 import { RecipeFinder } from '../recipe/recipe.finder';
 

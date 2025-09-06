@@ -1,10 +1,10 @@
-import { GraphQLError } from 'graphql';
-import { ObjectType } from 'simplytyped';
-
 import { flatten } from 'flat';
-import { JsonObject } from 'type-fest';
-import { BaseError } from './errors';
+import { GraphQLError } from 'graphql';
 import { castArray } from 'lodash';
+import { ObjectType } from 'simplytyped';
+import { JsonObject } from 'type-fest';
+
+import { BaseError } from './errors';
 
 export function createGraphqlFormatError() {
   return (object: ObjectType<GraphQLError>, graphqlError: GraphQLError) => {
@@ -43,7 +43,7 @@ export function createGraphqlFormatError() {
 
     const result = {
       message,
-      // eslint-disable-next-line perfectionist/sort-objects
+
       path: castArray(path).join('.'),
       // eslint-disable-next-line perfectionist/sort-objects
       extensions,

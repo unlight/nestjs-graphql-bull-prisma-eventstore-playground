@@ -2,6 +2,7 @@ import { NotFoundException, OnModuleInit } from '@nestjs/common';
 import { DiscoveryService } from '@nestjs/core';
 import { Args, Query, Resolver } from '@nestjs/graphql';
 import { Queue, Job } from 'bullmq';
+
 import { Task, TaskState } from './task.model';
 import { JobState } from './types';
 
@@ -41,12 +42,15 @@ export class TaskResolver implements OnModuleInit {
 
   private getTaskState(jobState: JobState) {
     switch (jobState) {
-      case 'completed':
+      case 'completed': {
         return TaskState.SUCCESS;
-      case 'failed':
+      }
+      case 'failed': {
         return TaskState.FAILED;
-      default:
+      }
+      default: {
         return TaskState.PENDING;
+      }
     }
   }
 

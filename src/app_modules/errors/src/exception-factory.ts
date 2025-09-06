@@ -1,5 +1,6 @@
 import { ValidationError } from 'class-validator';
 import { validationError } from 'class-validator-flat-formatter';
+
 import { BadRequestError } from './errors';
 
 export function exceptionFactory(validationErrors: ValidationError[]) {

@@ -1,9 +1,3 @@
-import {
-  GlobalExceptionFilter,
-  createGraphqlFormatError,
-  exceptionFactory,
-} from '@/errors';
-import { TaskModule } from '@/job-task';
 import { ExpressAdapter } from '@bull-board/express';
 import { BullBoardModule } from '@bull-board/nestjs';
 import { ApolloDriver } from '@nestjs/apollo';
@@ -18,9 +12,17 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { useContainer } from 'class-validator';
 import { CqrxModule, EventStoreService } from 'nestjs-cqrx';
 import { NestoLogger } from 'nestolog';
+
+import {
+  GlobalExceptionFilter,
+  createGraphqlFormatError,
+  exceptionFactory,
+} from '@/errors';
+import { TaskModule } from '@/job-task';
+
 import { AppEnvironment } from './app.environment';
-import { RecipeModule } from './recipe/recipe.module'; // import 1
 import * as Modules from './modules'; // import 2 (must be imported last)
+import { RecipeModule } from './recipe/recipe.module'; // import 1
 
 const GraphQLRootModule = GraphQLModule.forRootAsync({
   driver: ApolloDriver,

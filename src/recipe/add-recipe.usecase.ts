@@ -1,8 +1,10 @@
-import { BaseError } from '@/errors';
 import { Injectable, Logger } from '@nestjs/common';
 import { PubSub } from 'graphql-subscriptions';
 import { ResultAsync } from 'neverthrow';
 import { ObjectType } from 'simplytyped';
+
+import { BaseError } from '@/errors';
+
 import { NewRecipeInput } from './dto/new-recipe.input';
 import { RecipeProjection } from './recipe.projection';
 import * as Recipe from './recipe.providers';
@@ -44,8 +46,8 @@ export class AddRecipeUseCase {
           await this.projection.update(recipe.id);
         },
       )
-      .catch(cause => {
-        throw new RecipeError('Add recipe error:', { cause });
+      .catch(error => {
+        throw new RecipeError('Add recipe error:', { cause: error });
       });
   }
 }
