@@ -4,7 +4,7 @@
   "peerDependencies": {
     "@nestjs/core": "11 - 12",
     "@nestjs/common": "11 - 12",
-    "@nestjs/graphql": "11 - 12",
-    "bullmq": "5"
+    "@nestjs/graphql": "11 - 13",
+    "bullmq": "5 - 5"
   }
 }

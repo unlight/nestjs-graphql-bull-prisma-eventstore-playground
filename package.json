@@ -3,7 +3,9 @@
   "private": true,
   "version": "0.0.0-dev",
   "main": "index.js",
-  "workspaces": ["src/app_modules/*"],
+  "workspaces": [
+    "src/app_modules/*"
+  ],
   "scripts": {
     "start:dev": "nest start --watch",
     "dev": "onchange -v \"**/*.ts\" -k -i -- ts-node src/main.ts",

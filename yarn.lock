@@ -3261,10 +3261,10 @@ class-transformer@^0.5.1:
   resolved "https://registry.yarnpkg.com/class-transformer/-/class-transformer-0.5.1.tgz#24147d5dffd2a6cea930a3250a677addf96ab336"
   integrity sha512-SQa1Ws6hUbfC98vKGxZH3KFY0Y1lm5Zm0SY8XX9zbK7FJCyVEac3ATW0RIpwzW+oOfmHE5PMPufDG9hCfoEOMw==
 
-class-validator-flat-formatter@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/class-validator-flat-formatter/-/class-validator-flat-formatter-5.0.0.tgz#f7e207bef06922bef20970cc823c1c8bf699d8b8"
-  integrity sha512-Suq9NjXOvOZJ4Af0Rosza2pLpkLCfisyjltoafNXIqRBH2/uTcGDt7oxLehjz4UDosHxwVaAuBx5j3tM8tO7Hg==
+class-validator-flat-formatter@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/class-validator-flat-formatter/-/class-validator-flat-formatter-6.0.0.tgz#a3ebd3c88d2fcbd8d2cfe9f833cd5815bb09282b"
+  integrity sha512-CEQxZPphQots/Xt/SutKHX4WqoMkXQP/uyTASzpJmqSup3KCxOk5kHkgiBVSlTckRMMRXzqWeyPwRZJeBR09TQ==
 
 class-validator@^0.14.2:
   version "0.14.2"

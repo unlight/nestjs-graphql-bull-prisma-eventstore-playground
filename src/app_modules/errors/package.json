@@ -3,19 +3,17 @@
   "version": "1.0.0",
   "main": "dist/index",
   "types": "dist/index",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "clean": "rm -rf ./dist",
     "build": "tsc -p tsconfig.build.json"
   },
   "dependencies": {
-    "class-validator-flat-formatter": "^5.0.0",
+    "class-validator-flat-formatter": "^6.0.0",
     "flat": "^6.0.1"
   },
   "peerDependencies": {
-    "@nestjs/common": "^10.3.8",
-    "class-validator": "^0.14.1"
+    "@nestjs/common": "10 - 11",
+    "class-validator": "^0.14.2"
   }
 }
