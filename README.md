@@ -19,6 +19,7 @@
 
 ## TODO
 
+- add search in bull queues
 - switch to esm
 - match errors
 - viewRepository under read/write service

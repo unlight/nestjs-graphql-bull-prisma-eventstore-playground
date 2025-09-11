@@ -1,0 +1,12 @@
+#!/bin/bash
+PATH="$PWD/node_modules/.bin":$PATH
+set -e
+
+build() {
+  set -x
+  rm -rfv dist
+  microbundle -i src/main.ts --tsconfig tsconfig.build.json --no-generateTypes --no-sourcemap --no-compress --no-pkg-main --target node -f esm -o dist
+  set +x
+}
+
+"$@"

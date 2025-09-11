@@ -8,12 +8,10 @@
     "clean": "rm -rf ./dist",
     "build": "tsc -p tsconfig.build.json"
   },
-  "dependencies": {
-    "class-validator-flat-formatter": "^6.0.0",
-    "flat": "^6.0.1"
-  },
   "peerDependencies": {
     "@nestjs/common": "10 - 11",
-    "class-validator": "^0.14.2"
+    "class-validator": "^0.14.2",
+    "class-validator-flat-formatter": "^6.0.0",
+    "flat": "^6.0.1"
   }
 }
