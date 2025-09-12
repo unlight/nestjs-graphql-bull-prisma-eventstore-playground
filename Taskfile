@@ -1,4 +1,3 @@
-#!/bin/bash
 PATH="$PWD/node_modules/.bin":$PATH
 set -e
 

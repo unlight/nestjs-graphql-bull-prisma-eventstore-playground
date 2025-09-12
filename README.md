@@ -47,8 +47,8 @@ docker buildx inspect
 dive <image-name>
 docker images --format "table {{.ID}}\t{{.Repository}}\t{{.Tag}}\t{{.Size}}"
 docker run -it -v "$PWD/data":/data -e DATABASE_URL=file:/data/db.sqlite -p 8080:3000 app
-docker run -it -p 8080:3000 app
+docker run -it --env-file .env.local -p 8080:3000 app
 curl -i http://localhost:8080/api
 docker run -it app sh
-docker run -it --env-file .env.local app sh
+docker run -it -p 3000:3000 --env-file .env.local app sh
 ```
