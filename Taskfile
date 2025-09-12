@@ -4,8 +4,9 @@ set -e
 
 build() {
   set -x
+  prisma generate
   rm -rfv dist
-  microbundle -i src/main.ts --tsconfig tsconfig.build.json --no-generateTypes --no-sourcemap --no-compress --no-pkg-main --target node -f esm -o dist
+  microbundle -i src/main.ts --tsconfig tsconfig.build.json --no-generateTypes --no-sourcemap --no-compress --no-pkg-main --target node -f cjs -o dist
   set +x
 }
 

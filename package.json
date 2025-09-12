@@ -24,7 +24,7 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@apollo/server": "4.X",
+    "@apollo/server": "4.12.2",
     "@bull-board/api": "^6.12.7",
     "@bull-board/express": "^6.12.7",
     "@bull-board/nestjs": "^6.12.7",
