@@ -2,8 +2,8 @@
   "name": "test-utils",
   "version": "0.0.0-dev",
   "devDependencies": {
-    "gql.tada": "1 - 1",
-    "graphql": "16 - 16",
-    "supertest": "7 - 7"
+    "gql.tada": "^1.8.13",
+    "graphql": "^16.11.0",
+    "supertest": "^7.1.4"
   }
 }
