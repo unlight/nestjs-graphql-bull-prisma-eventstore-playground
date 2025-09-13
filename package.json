@@ -3,9 +3,7 @@
   "private": true,
   "version": "0.0.0-dev",
   "main": "index.js",
-  "workspaces": [
-    "src/app_modules/*"
-  ],
+  "workspaces": ["src/app_modules/*"],
   "scripts": {
     "start:dev": "nest start --watch",
     "build": "sh Taskfile build",
@@ -110,5 +108,8 @@
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.43.0",
     "workspace-alias": "^0.1.0"
+  },
+  "overrides": {
+    "express": "5"
   }
 }
