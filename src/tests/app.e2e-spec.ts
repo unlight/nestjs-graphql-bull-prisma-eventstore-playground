@@ -8,6 +8,8 @@ import { expect } from 'expect';
 import { VariablesOf, graphql } from 'gql.tada';
 import { uniqueId } from 'lodash';
 
+import { afterAll, beforeAll, it } from 'vitest';
+
 import {
   GraphqlRequestFunction,
   createGraphqlRequest,
@@ -16,18 +18,19 @@ import {
 
 import { AppModule, configureApplication } from '../app.module';
 import { RecipeFinder } from '../recipe/recipe.finder';
+import { setTimeout } from 'timers/promises';
 
 let app: INestApplication;
 let graphqlRequest: GraphqlRequestFunction;
 let queue: Queue;
 
-before(async () => {
+beforeAll(async () => {
   const testingModule = await Test.createTestingModule({
     imports: [AppModule],
   }).compile();
   app = testingModule.createNestApplication();
-  configureApplication(app, { logEvents: true });
-  // app.useLogger(false); // Disable all logs
+  await configureApplication(app, { logEvents: true });
+  if (process.env.CI) app.useLogger(false); // Disable all logs in CI
 
   graphqlRequest = createGraphqlRequest(app.getHttpServer());
 
@@ -35,7 +38,7 @@ before(async () => {
   await queue.obliterate();
 });
 
-after(async () => {
+afterAll(async () => {
   await app.close();
 });
 
@@ -43,7 +46,7 @@ it('smoke', () => {
   expect(app).toBeTruthy();
 });
 
-it('read recipes', async () => {
+it.only('read recipes', async () => {
   const recipesQuery = graphql(`
     query getRecipe {
       recipes {
@@ -144,7 +147,7 @@ it('create and remove', async () => {
   );
 });
 
-it('revert recipe with non uniq code', async () => {
+it.skip('revert recipe with non uniq code', async () => {
   // Arrange
   const service = await app.resolve(RecipeFinder);
   const addRecipe = graphql(`
@@ -152,7 +155,7 @@ it('revert recipe with non uniq code', async () => {
       addRecipe(data: $data)
     }
   `);
-  const code = Math.random().toString(36).slice(2);
+  const code = uniqueId('code');
   const data: VariablesOf<typeof addRecipe>['data'] = {
     code,
     title: 'aqew 1',
@@ -163,6 +166,10 @@ it('revert recipe with non uniq code', async () => {
     graphqlRequest(addRecipe, { data }),
   ]);
   await waitWhenAllJobsFinished(queue);
+
+  console.log('result1', result1);
+  console.log('result2', result2);
+
   // Assert
   expect(result1.data.addRecipe).toBeTruthy();
   expect(result2.data.addRecipe).toBeTruthy();

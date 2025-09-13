@@ -3,6 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { Queue, Worker } from 'bullmq';
 import { expect } from 'expect';
+import { afterAll, beforeAll, it } from 'vitest';
 
 import {
   GraphqlRequestFunction,
@@ -18,30 +19,28 @@ let graphqlRequest: GraphqlRequestFunction;
 let queue: Queue;
 let environment: AppEnvironment;
 
-before(async () => {
+beforeAll(async () => {
   const testingModule = await Test.createTestingModule({
     imports: [AppModule, BullModule.registerQueue({ name: 'bull' })],
   }).compile();
   app = testingModule.createNestApplication();
-  configureApplication(app, { logEvents: true });
-  // app.useLogger(false); // Disable all logs
+  await configureApplication(app, { logEvents: true });
+  if (process.env.CI) app.useLogger(false); // Disable all logs in CI
   environment = await app.resolve(AppEnvironment);
-
   graphqlRequest = createGraphqlRequest(app.getHttpServer());
-
   queue = await app.resolve(getQueueToken('bull'));
   await queue.obliterate();
 });
 
-after(async () => {
-  await app.close();
+afterAll(async () => {
+  await app?.close();
 });
 
 it('smoke', () => {
   expect(app).toBeTruthy();
 });
 
-it.skip('run parallel with same ids', async () => {
+it('run parallel with same ids', async () => {
   const shipmentQueue = new Queue('shipmentQueue');
 
   const worker = new Worker(
@@ -106,7 +105,7 @@ it.skip('run parallel with same ids', async () => {
   await worker.close();
 });
 
-it.only('buulmq quick start', async () => {
+it('bulmq quick start', async () => {
   const myQueue = new Queue('foo');
 
   async function addJobs() {

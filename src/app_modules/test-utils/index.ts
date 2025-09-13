@@ -2,28 +2,36 @@ import { setTimeout } from 'node:timers/promises';
 
 import { Queue } from 'bullmq';
 import { ResultOf, TadaDocumentNode, VariablesOf } from 'gql.tada';
-import { print } from 'graphql';
+import { GraphQLError, print } from 'graphql';
 import request from 'supertest';
+import { App } from 'supertest/types';
 
 type GraphQLRequestResult<Q> = {
-  data: ResultOf<Q>;
-  errors?: any[];
-  error?: any;
+  data?: ResultOf<Q> | null;
+  errors?: GraphQLError[];
+  error?: GraphQLError;
 };
 
 export type GraphqlRequestFunction = ReturnType<typeof createGraphqlRequest>;
 
-export function createGraphqlRequest(server) {
+interface GraphqlResponse {
+  errors?: GraphQLError[];
+  data: any;
+  extensions?: any;
+}
+
+export function createGraphqlRequest(server: App) {
   return async function graphqlRequest<
     Q extends TadaDocumentNode<ResultOf<Q>, VariablesOf<Q>>,
   >(query: Q, variables?: VariablesOf<Q>): Promise<GraphQLRequestResult<Q>> {
-    const { data, errors } = await request(server)
+    const response = await request(server)
       .post('/graphql')
       .send({
         query: print(query),
         variables,
-      })
-      .then(response => response.body);
+      });
+    const { data, errors } = response.body as GraphqlResponse;
+
     return { data, error: errors?.[0], errors };
   };
 }

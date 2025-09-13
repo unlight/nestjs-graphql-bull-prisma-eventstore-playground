@@ -6,8 +6,6 @@ import { printSchema } from 'graphql';
 
 import { AppModule } from '../src/app.module';
 
-generateSchema();
-
 async function generateSchema() {
   const app = await NestFactory.create(AppModule, { logger: false });
   const modules = app.get(ModulesContainer);
@@ -38,3 +36,5 @@ function getResolvers(modules: ModulesContainer) {
 
   return resolvers as Function[];
 }
+
+void generateSchema();
