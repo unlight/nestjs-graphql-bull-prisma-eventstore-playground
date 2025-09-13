@@ -67,6 +67,11 @@ const GraphQLRootModule = GraphQLModule.forRootAsync({
     }),
     BullBoardModule.forRoot({
       adapter: ExpressAdapter,
+      boardOptions: {
+        uiConfig: {
+          miscLinks: [{ text: 'Search', url: '/search' }],
+        },
+      },
       route: '/queues',
     }),
     RecipeModule,

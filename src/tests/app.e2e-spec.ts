@@ -4,11 +4,10 @@ import { getQueueToken } from '@nestjs/bullmq';
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { Queue } from 'bullmq';
-import { expect } from 'expect';
 import { VariablesOf, graphql } from 'gql.tada';
 import { uniqueId } from 'lodash';
 
-import { afterAll, beforeAll, it } from 'vitest';
+import { expect, afterAll, beforeAll, it } from 'vitest';
 
 import {
   GraphqlRequestFunction,
