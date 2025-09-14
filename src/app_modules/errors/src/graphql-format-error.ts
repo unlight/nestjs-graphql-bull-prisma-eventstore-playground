@@ -23,17 +23,13 @@ export function createGraphqlFormatError() {
       delimiter: '.',
     });
 
-    // console.log('textData', textData);
-    // console.log('error', error);
-    // console.log('flatData', flatData);
-
     for (const [key, value] of Object.entries(flatData)) {
-      // console.log({ value, canBeStringified: canBeStringified(value) });
       if (!canBeStringified(value)) continue;
       if (['number', 'bigint'].includes(typeof value)) {
         extensions[key] = value;
         continue;
       }
+      // eslint-disable-next-line @typescript-eslint/no-base-to-string
       const stringValue = String(value);
       if (textData.some(text => text.includes(stringValue))) continue;
 
@@ -43,7 +39,6 @@ export function createGraphqlFormatError() {
 
     const result = {
       message,
-
       path: castArray(path).join('.'),
       // eslint-disable-next-line perfectionist/sort-objects
       extensions,

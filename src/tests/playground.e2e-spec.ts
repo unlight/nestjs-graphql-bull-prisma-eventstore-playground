@@ -2,7 +2,6 @@ import { getQueueToken } from '@nestjs/bullmq';
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { Queue } from 'bullmq';
-
 import { expect, afterAll, beforeAll, it } from 'vitest';
 
 import { GraphqlRequestFunction, createGraphqlRequest } from '@/test-utils';

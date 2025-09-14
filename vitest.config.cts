@@ -7,7 +7,7 @@ export default defineConfig({
   test: {
     fileParallelism: false,
     environment: 'node',
-    include: ['**/*.e2e-spec.ts'],
+    include: ['**/*.e2e-spec.ts', '**/*.spec.ts'],
     reporters: 'dot',
   },
 });

@@ -2,8 +2,7 @@ import { BullModule, getQueueToken } from '@nestjs/bullmq';
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { Queue, Worker } from 'bullmq';
-import { expect } from 'expect';
-import { afterAll, beforeAll, it } from 'vitest';
+import { afterAll, beforeAll, expect, it } from 'vitest';
 
 import {
   GraphqlRequestFunction,

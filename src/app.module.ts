@@ -67,11 +67,6 @@ const GraphQLRootModule = GraphQLModule.forRootAsync({
     }),
     BullBoardModule.forRoot({
       adapter: ExpressAdapter,
-      boardOptions: {
-        uiConfig: {
-          miscLinks: [{ text: 'Search', url: '/search' }],
-        },
-      },
       route: '/queues',
     }),
     RecipeModule,
@@ -106,9 +101,14 @@ export async function configureApplication(
     const logger = new Logger('Event');
     const eventStoreService = app.get(EventStoreService);
 
-    const unsubscribe = eventStoreService.subscribeToAll(event => {
-      logger.verbose(event);
-    });
+    eventStoreService.subscribeToAll(
+      event => {
+        logger.verbose(event);
+      },
+      error => {
+        logger.error(error);
+      },
+    );
   }
 
   await app.init();

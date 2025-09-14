@@ -112,6 +112,9 @@ export default defineConfig(
   {
     extends: ['depend/flat/recommended'],
     plugins: { depend },
+    rules: {
+      'depend/ban-dependencies': [1, { allowed: ['lodash'] }],
+    },
   },
   {
     files: ['**/*.spec.ts', '**/*.e2e-spec.ts'],

@@ -1,3 +1,4 @@
+import assert from 'node:assert';
 import { randomInt } from 'node:crypto';
 
 import { getQueueToken } from '@nestjs/bullmq';
@@ -6,7 +7,6 @@ import { Test } from '@nestjs/testing';
 import { Queue } from 'bullmq';
 import { VariablesOf, graphql } from 'gql.tada';
 import { uniqueId } from 'lodash';
-
 import { expect, afterAll, beforeAll, it } from 'vitest';
 
 import {
@@ -17,7 +17,6 @@ import {
 
 import { AppModule, configureApplication } from '../app.module';
 import { RecipeFinder } from '../recipe/recipe.finder';
-import { setTimeout } from 'timers/promises';
 
 let app: INestApplication;
 let graphqlRequest: GraphqlRequestFunction;
@@ -45,7 +44,7 @@ it('smoke', () => {
   expect(app).toBeTruthy();
 });
 
-it.only('read recipes', async () => {
+it('read recipes', async () => {
   const recipesQuery = graphql(`
     query getRecipe {
       recipes {
@@ -59,7 +58,7 @@ it.only('read recipes', async () => {
   expect(error).toBeFalsy();
 });
 
-it('create recipe ok', async () => {
+it.only('create recipe ok', async () => {
   // Arrange
   const service = await app.resolve(RecipeFinder);
   const createRecipe = graphql(`
@@ -78,6 +77,8 @@ it('create recipe ok', async () => {
   });
   expect(errors).toBeFalsy();
   await waitWhenAllJobsFinished(queue);
+
+  assert.ok(data);
 
   const task = await graphqlRequest(
     graphql(`
@@ -129,7 +130,7 @@ it('create and remove', async () => {
     `),
     {
       data: {
-        id: create.data.addRecipe,
+        id: create.data!.addRecipe,
         removeReason: uniqueId('test remove'),
       },
     },
@@ -138,7 +139,7 @@ it('create and remove', async () => {
 
   await waitWhenAllJobsFinished(queue);
   // Assert
-  const recipe = await service.findOneById(create.data.addRecipe);
+  const recipe = await service.findOneById(create.data!.addRecipe);
   expect(recipe).toEqual(
     expect.objectContaining({
       isActive: false,
@@ -146,7 +147,7 @@ it('create and remove', async () => {
   );
 });
 
-it.skip('revert recipe with non uniq code', async () => {
+it('revert recipe with non uniq code', async () => {
   // Arrange
   const service = await app.resolve(RecipeFinder);
   const addRecipe = graphql(`
@@ -166,14 +167,11 @@ it.skip('revert recipe with non uniq code', async () => {
   ]);
   await waitWhenAllJobsFinished(queue);
 
-  console.log('result1', result1);
-  console.log('result2', result2);
-
   // Assert
-  expect(result1.data.addRecipe).toBeTruthy();
-  expect(result2.data.addRecipe).toBeTruthy();
-  const recipe1 = await service.findOneById(result1.data.addRecipe);
-  const recipe2 = await service.findOneById(result2.data.addRecipe);
+  expect(result1.data?.addRecipe).toBeTruthy();
+  expect(result2.data?.addRecipe).toBeTruthy();
+  const recipe1 = await service.findOneById(result1.data!.addRecipe);
+  const recipe2 = await service.findOneById(result2.data!.addRecipe);
 
   const result = [recipe1, recipe2].filter(Boolean);
 
