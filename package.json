@@ -22,7 +22,8 @@
     "graphqlenv:g": "ts-node scripts/generate-graphql-env.ts",
     "test": "npm run eslint && npm run test:r",
     "test:r": "vitest run",
-    "test:w": "vitest watch"
+    "test:w": "vitest watch",
+    "db:push": "env-cmd prisma db push"
   },
   "license": "ISC",
   "type": "commonjs",

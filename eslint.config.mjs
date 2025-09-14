@@ -99,12 +99,7 @@ export default defineConfig(
   },
   {
     extends: [tseslint.configs.disableTypeChecked],
-    files: [
-      '*.config.mjs',
-      '*.config.mts',
-      '.remarkrc.cjs',
-      'stryker.conf.mjs',
-    ],
+    files: ['*.config.*', '.remarkrc.cjs', 'stryker.conf.mjs'],
     rules: {
       'import-x/no-named-as-default-member': 0,
     },

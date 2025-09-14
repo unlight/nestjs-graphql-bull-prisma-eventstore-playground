@@ -58,7 +58,7 @@ it('read recipes', async () => {
   expect(error).toBeFalsy();
 });
 
-it.only('create recipe ok', async () => {
+it('create recipe ok', async () => {
   // Arrange
   const service = await app.resolve(RecipeFinder);
   const createRecipe = graphql(`

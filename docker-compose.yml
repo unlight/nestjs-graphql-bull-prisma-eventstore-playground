@@ -51,7 +51,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=nest_es_bull_pg
+      - POSTGRES_DB=pgdb
       - DEBUG=false
     ports:
       - '5432:5432'
