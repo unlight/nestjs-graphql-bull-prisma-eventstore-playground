@@ -33,6 +33,7 @@ const GraphQLRootModule = GraphQLModule.forRootAsync({
     return {
       autoSchemaFile: '~schema.gql',
       formatError: createGraphqlFormatError(),
+      graphiql: true,
       installSubscriptionHandlers: true,
       sortSchema: true,
     };
